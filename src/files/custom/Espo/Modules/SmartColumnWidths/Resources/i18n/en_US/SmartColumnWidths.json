@@ -1,0 +1,18 @@
+{
+    "labels": {
+        "Columns": "Columns",
+        "Close": "Close",
+        "Hidden Columns": "Hidden columns",
+        "Move Column": "Move column",
+        "No Columns": "No columns",
+        "Reset All": "Reset all",
+        "Reset Column Width": "Reset column width",
+        "Reset Order": "Reset order",
+        "Resize Column": "Resize column",
+        "Search Columns": "Search columns",
+        "Show All": "Show all",
+        "Toggle Column": "Toggle column",
+        "Visible Columns": "Visible columns"
+    }
+}
+

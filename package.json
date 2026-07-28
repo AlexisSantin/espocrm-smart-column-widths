@@ -1,22 +1,23 @@
 {
-  "name": "espocrm-ext-{@nameHyphen}",
-  "version": "0.0.1",
-  "description": "",
+  "name": "espocrm-ext-smart-column-widths",
+  "version": "0.1.0",
+  "description": "Predictable and adaptive column resizing for EspoCRM list views",
   "scripts": {
+    "test": "node --test --test-reporter=spec src/tests/*.test.js",
     "sa": "vendor/bin/phpstan",
     "unit-tests": "vendor/bin/phpunit",
-    "integration-tests": "node build --copy && node build --composer-install && cd site && php vendor/bin/phpunit tests/integration/Espo/Modules/{@name}",
+    "integration-tests": "node build --copy && node build --composer-install && cd site && php vendor/bin/phpunit tests/integration/Espo/Modules/SmartColumnWidths",
     "copy": "node build --copy",
     "composer-install": "node build --composer-install",
     "sync": "node build --copy && node build --composer-install",
     "extension": "node build --extension",
-    "clear-cache": "php site/clear_cache.php",
+    "clear-cache": "docker compose -f ../compose.yaml exec -T web php clear_cache.php",
     "rebuild": "node build --rebuild",
     "all": "node build --all",
     "prepare-test": "node build --prepare-test"
   },
   "type": "module",
-  "author": "{@author}",
+  "author": "Alex Santin",
   "dependencies": {
     "espo-extension-tools": "github:espocrm/extension-tools#0.4.5",
     "fs-extra": "^9.0.0"

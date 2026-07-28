@@ -1,0 +1,117 @@
+.scw-list {
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+.scw-managed-table {
+    table-layout: fixed;
+}
+
+.scw-managed-table > thead > tr > th.field-header-cell[data-name] {
+    padding-left: 24px;
+    position: relative;
+}
+
+[dir="rtl"] .scw-managed-table > thead > tr > th.field-header-cell[data-name] {
+    padding-left: var(--table-cell-padding);
+    padding-right: 24px;
+}
+
+.scw-managed-table .scw-drag-handle {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: var(--text-muted-color);
+    cursor: grab;
+    display: flex;
+    height: 24px;
+    justify-content: center;
+    left: 3px;
+    opacity: 0;
+    padding: 0;
+    position: absolute;
+    top: 7px;
+    transition: opacity 100ms ease;
+    width: 18px;
+    z-index: 2;
+}
+
+[dir="rtl"] .scw-managed-table .scw-drag-handle {
+    left: auto;
+    right: 3px;
+}
+
+.scw-managed-table th:hover > .scw-drag-handle,
+.scw-managed-table .scw-drag-handle:focus-visible {
+    opacity: 0.72;
+}
+
+.scw-managed-table .scw-drag-handle:hover {
+    color: var(--text-color);
+    opacity: 1;
+}
+
+.scw-managed-table .scw-drag-handle:active {
+    cursor: grabbing;
+}
+
+.scw-managed-table > thead > tr > th > .scw-resizer {
+    display: block;
+    height: 100%;
+    right: -5px;
+    top: 0;
+    width: 10px;
+    z-index: 4;
+}
+
+.scw-managed-table > thead > tr > th > .scw-resizer::after {
+    border-right: 1px solid transparent;
+    height: 18px;
+    right: 5px;
+    top: 10px;
+    transition: border-color 100ms ease;
+}
+
+.scw-managed-table > thead > tr > th:hover > .scw-resizer::after,
+.scw-managed-table > thead > tr > th > .scw-resizer:hover::after {
+    border-right-color: var(--gray-light);
+}
+
+.scw-managed-table .scw-filler-cell {
+    border-left: 0;
+    border-right: 0;
+    padding: 0;
+}
+
+.scw-column-guide {
+    background: var(--brand-primary);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand-primary) 30%, transparent);
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    width: 2px;
+    z-index: 1100;
+}
+
+.scw-column-guide[data-type="reorder"] {
+    width: 3px;
+}
+
+body.scw-is-resizing,
+body.scw-is-resizing * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+body.scw-is-reordering,
+body.scw-is-reordering * {
+    cursor: grabbing !important;
+    user-select: none !important;
+}
+
+@media (max-width: 767px) {
+    .scw-managed-table .scw-drag-handle,
+    .scw-managed-table .scw-resizer {
+        display: none !important;
+    }
+}

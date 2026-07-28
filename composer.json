@@ -1,12 +1,12 @@
 {
-    "name": "espocrm/ext-{@nameHyphen}",
+    "name": "espocrm/ext-smart-column-widths",
     "require": {
         "php": ">=8.3"
     },
     "autoload-dev": {
         "psr-4": {
-            "Espo\\Modules\\{@name}\\": "src/files/custom/Espo/Modules/{@name}",
-            "tests\\unit\\Espo\\Modules\\{@name}\\": "tests/unit/Espo/Modules/{@name}"
+            "Espo\\Modules\\SmartColumnWidths\\": "src/files/custom/Espo/Modules/SmartColumnWidths",
+            "tests\\unit\\Espo\\Modules\\SmartColumnWidths\\": "tests/unit/Espo/Modules/SmartColumnWidths"
         }
     },
     "require-dev": {

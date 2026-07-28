@@ -1,0 +1,9 @@
+{
+    "viewSetupHandlers": {
+        "record/list": [
+            "__APPEND__",
+            "smart-column-widths:handlers/record/list-columns"
+        ]
+    }
+}
+
