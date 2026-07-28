@@ -1,6 +1,7 @@
 import {
     calculateTableSizing,
     constrainWidth,
+    fitColumnWidths,
     findHeaderAtResizeBoundary,
     measureContentWidth,
 } from 'smart-column-widths:utils/field-sizing';
@@ -134,13 +135,53 @@ export default class ListTableController {
     }
 
     captureInitialWidths() {
-        const map = {};
+        let map = {};
 
         this.getFieldHeaders().forEach(header => {
             map[header.dataset.name] = header.getBoundingClientRect().width;
         });
 
+        if (this.manager.shouldFitInitialWidths()) {
+            map = fitColumnWidths(
+                map,
+                this.getAvailableFieldWidth(),
+                this.manager.getMinimumWidth()
+            );
+            this.manager.captureWidths(map, 1);
+
+            return;
+        }
+
         this.manager.captureWidths(map);
+    }
+
+    getAvailableFieldWidth() {
+        const headerRow = this.table?.querySelector(
+            ':scope > thead > tr'
+        );
+
+        if (!headerRow || !this.listElement) {
+            return 0;
+        }
+
+        const staticWidth = [...headerRow.children]
+            .filter(header =>
+                !header.classList.contains('scw-filler-cell') &&
+                (
+                    !header.classList.contains('field-header-cell') ||
+                    header.classList.contains('action-cell')
+                )
+            )
+            .reduce(
+                (width, header) =>
+                    width + header.getBoundingClientRect().width,
+                0
+            );
+
+        return Math.max(
+            0,
+            this.listElement.clientWidth - staticWidth - 2
+        );
     }
 
     buildColumnModel() {
@@ -232,10 +273,10 @@ export default class ListTableController {
         let fieldWidth = 0;
 
         this.colMap.forEach((col, name) => {
-            const width = Math.max(
-                this.manager.getMinimumWidth(),
-                state.widths[name] || 0
-            );
+            const storedWidth = state.widths[name];
+            const width = Number.isFinite(storedWidth) ?
+                Math.max(1, storedWidth) :
+                this.manager.getMinimumWidth();
 
             col.style.width = `${width}px`;
             fieldWidth += width;

@@ -226,7 +226,7 @@ export default class ListColumnManager {
         return getFieldMinimumWidth();
     }
 
-    captureWidths(widthMap) {
+    captureWidths(widthMap, minimum = this.getMinimumWidth()) {
         if (!this.state) {
             return;
         }
@@ -239,7 +239,7 @@ export default class ListColumnManager {
             }
 
             this.state.widths[name] = Math.max(
-                this.getMinimumWidth(),
+                minimum,
                 Math.round(width)
             );
             changed = true;
@@ -248,6 +248,11 @@ export default class ListColumnManager {
         if (changed) {
             this.store.save();
         }
+    }
+
+    shouldFitInitialWidths() {
+        return Boolean(this.state) &&
+            Object.keys(this.state.widths).length === 0;
     }
 
     setWidth(name, width) {

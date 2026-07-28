@@ -9,6 +9,7 @@ import {
 } from '../files/client/custom/modules/smart-column-widths/src/utils/column-state.js';
 import {
     constrainWidth,
+    fitColumnWidths,
     findHeaderAtResizeBoundary,
     getFieldMinimumWidth,
 } from '../files/client/custom/modules/smart-column-widths/src/utils/field-sizing.js';
@@ -92,6 +93,33 @@ test('all field types share the same compact minimum width', () => {
     assert.equal(getFieldMinimumWidth('custom', 'unknown'), 56);
     assert.equal(constrainWidth(22.4, 56), 56);
     assert.equal(constrainWidth(147.6, 56), 148);
+});
+
+test('reset widths fit the viewport without horizontal overflow', () => {
+    const fitted = fitColumnWidths(
+        {name: 240, status: 140, emailAddress: 220},
+        420,
+        56
+    );
+
+    assert.ok(Object.values(fitted).every(width => width >= 56));
+    assert.ok(
+        Object.values(fitted).reduce((sum, width) => sum + width, 0) <= 420
+    );
+});
+
+test('reset can go below the resize minimum when columns cannot fit', () => {
+    const fitted = fitColumnWidths(
+        {name: 100, status: 100, emailAddress: 100},
+        120,
+        56
+    );
+
+    assert.deepEqual(fitted, {
+        name: 40,
+        status: 40,
+        emailAddress: 40,
+    });
 });
 
 test('resize boundaries are easy to hit from both sides', () => {

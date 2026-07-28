@@ -34,6 +34,83 @@ export function calculateTableSizing(availableWidth, contentWidth) {
 }
 
 /**
+ * Fit rendered widths into the available field area. The regular resize
+ * minimum is retained whenever possible. When there are too many columns,
+ * the effective minimum is reduced so a reset never creates an overflow.
+ *
+ * @param {Record<string, number>} widthMap
+ * @param {number} availableWidth
+ * @param {number} minimum
+ * @return {Record<string, number>}
+ */
+export function fitColumnWidths(widthMap, availableWidth, minimum) {
+    const entries = Object.entries(widthMap)
+        .filter(([, width]) => Number.isFinite(width) && width > 0);
+    const budget = Math.max(0, Math.floor(availableWidth));
+
+    if (!entries.length) {
+        return {};
+    }
+
+    const total = entries.reduce((sum, [, width]) => sum + width, 0);
+
+    if (total <= budget) {
+        return Object.fromEntries(
+            entries.map(([name, width]) => [name, Math.floor(width)])
+        );
+    }
+
+    const effectiveMinimum = Math.min(
+        minimum,
+        budget / entries.length
+    );
+    const result = {};
+    let remaining = entries.map(([name, width]) => ({name, width}));
+    let remainingBudget = budget;
+
+    while (remaining.length) {
+        const remainingTotal = remaining.reduce(
+            (sum, item) => sum + item.width,
+            0
+        );
+        const scale = remainingTotal ?
+            remainingBudget / remainingTotal :
+            0;
+        const constrained = remaining.filter(
+            item => item.width * scale < effectiveMinimum
+        );
+
+        if (!constrained.length) {
+            remaining.forEach(item => {
+                result[item.name] = item.width * scale;
+            });
+
+            break;
+        }
+
+        constrained.forEach(item => {
+            result[item.name] = effectiveMinimum;
+            remainingBudget -= effectiveMinimum;
+        });
+
+        const constrainedNames = new Set(
+            constrained.map(item => item.name)
+        );
+
+        remaining = remaining.filter(
+            item => !constrainedNames.has(item.name)
+        );
+    }
+
+    return Object.fromEntries(
+        entries.map(([name]) => [
+            name,
+            Math.max(1, Math.floor(result[name] || 0)),
+        ])
+    );
+}
+
+/**
  * Find the column whose trailing edge is close enough to the pointer.
  * This coordinate-based hit test works on both sides of a boundary, even
  * though EspoCRM clips content that overflows a header cell.
