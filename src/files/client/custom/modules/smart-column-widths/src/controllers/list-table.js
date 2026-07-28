@@ -1,6 +1,7 @@
 import {
     calculateTableSizing,
     constrainWidth,
+    findHeaderAtResizeBoundary,
     measureContentWidth,
 } from 'smart-column-widths:utils/field-sizing';
 import {reorderNamedCells} from
@@ -21,6 +22,8 @@ export default class ListTableController {
 
         this.onPointerDownBind = this.onPointerDown.bind(this);
         this.onDoubleClickBind = this.onDoubleClick.bind(this);
+        this.onTablePointerMoveBind = this.onTablePointerMove.bind(this);
+        this.onTablePointerLeaveBind = this.clearResizeHover.bind(this);
         this.onPointerMoveBind = this.onPointerMove.bind(this);
         this.onPointerUpBind = this.onPointerUp.bind(this);
         this.onPointerCancelBind = this.onPointerCancel.bind(this);
@@ -43,6 +46,14 @@ export default class ListTableController {
             this.listElement = table.closest('.list');
             table.addEventListener('pointerdown', this.onPointerDownBind);
             table.addEventListener('dblclick', this.onDoubleClickBind);
+            table.addEventListener(
+                'pointermove',
+                this.onTablePointerMoveBind
+            );
+            table.addEventListener(
+                'pointerleave',
+                this.onTablePointerLeaveBind
+            );
             window.addEventListener('resize', this.onWindowResizeBind);
         }
 
@@ -249,9 +260,11 @@ export default class ListTableController {
     onPointerDown(event) {
         const resizer = event.target.closest('.scw-resizer');
         const dragHandle = event.target.closest('.scw-drag-handle');
+        const header = resizer?.closest('th[data-name]') ||
+            this.getResizeHeaderAtPointer(event);
 
-        if (resizer) {
-            this.startResize(event, resizer);
+        if (header) {
+            this.startResize(event, header);
 
             return;
         }
@@ -261,12 +274,11 @@ export default class ListTableController {
         }
     }
 
-    startResize(event, resizer) {
+    startResize(event, header) {
         if (!event.isPrimary || event.button !== 0) {
             return;
         }
 
-        const header = resizer.closest('th[data-name]');
         const name = header?.dataset.name;
 
         if (!name) {
@@ -416,12 +428,13 @@ export default class ListTableController {
 
     onDoubleClick(event) {
         const resizer = event.target.closest('.scw-resizer');
+        const header = resizer?.closest('th[data-name]') ||
+            this.getResizeHeaderAtPointer(event);
 
-        if (!resizer) {
+        if (!header) {
             return;
         }
 
-        const header = resizer.closest('th[data-name]');
         const name = header?.dataset.name;
 
         if (!name) {
@@ -447,6 +460,37 @@ export default class ListTableController {
         this.manager.getState().widths[name] = width;
         this.manager.setWidth(name, width);
         this.layoutTable();
+    }
+
+    onTablePointerMove(event) {
+        if (this.activeInteraction) {
+            return;
+        }
+
+        const header = this.getResizeHeaderAtPointer(event);
+
+        this.table?.classList.toggle('scw-resize-hot', Boolean(header));
+        this.table?.querySelector('th.scw-resize-hot')
+            ?.classList.remove('scw-resize-hot');
+        header?.classList.add('scw-resize-hot');
+    }
+
+    getResizeHeaderAtPointer(event) {
+        if (!event.target.closest('thead')) {
+            return null;
+        }
+
+        return findHeaderAtResizeBoundary(
+            this.getFieldHeaders(),
+            event.clientX,
+            document.documentElement.dir === 'rtl'
+        );
+    }
+
+    clearResizeHover() {
+        this.table?.classList.remove('scw-resize-hot');
+        this.table?.querySelector('th.scw-resize-hot')
+            ?.classList.remove('scw-resize-hot');
     }
 
     createGuide(x, type) {
@@ -504,6 +548,7 @@ export default class ListTableController {
         );
         this.table?.querySelector('th.being-resized')
             ?.classList.remove('being-resized');
+        this.clearResizeHover();
         document.querySelector('.scw-column-guide')?.remove();
         this.activeInteraction = null;
     }
@@ -519,6 +564,14 @@ export default class ListTableController {
             this.table.removeEventListener(
                 'dblclick',
                 this.onDoubleClickBind
+            );
+            this.table.removeEventListener(
+                'pointermove',
+                this.onTablePointerMoveBind
+            );
+            this.table.removeEventListener(
+                'pointerleave',
+                this.onTablePointerLeaveBind
             );
         }
 

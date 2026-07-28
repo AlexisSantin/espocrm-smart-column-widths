@@ -1,4 +1,8 @@
 {
+    "scriptList": [
+        "__APPEND__",
+        "client/custom/modules/smart-column-widths/lib/init.js"
+    ],
     "cssList": [
         "__APPEND__",
         "client/custom/modules/smart-column-widths/css/smart-column-widths.css"

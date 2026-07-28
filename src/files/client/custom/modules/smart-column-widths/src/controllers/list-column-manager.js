@@ -87,6 +87,7 @@ export default class ListColumnManager {
         }
 
         this.hideNativeResizeSetting();
+        this.ensureResetAction();
 
         if (!this.settingsMenuOpen || !this.settingsElement) {
             return;
@@ -116,7 +117,61 @@ export default class ListColumnManager {
         }
     }
 
+    ensureResetAction() {
+        const menu = this.settingsElement?.querySelector('.dropdown-menu');
+
+        if (!menu || menu.querySelector('[data-action="scwResetColumns"]')) {
+            return;
+        }
+
+        const divider = document.createElement('li');
+        const item = document.createElement('li');
+        const action = document.createElement('a');
+        const label = this.view.translate(
+            'Reset Order and Widths',
+            'labels',
+            'SmartColumnWidths'
+        );
+
+        divider.className = 'divider scw-reset-columns-divider';
+        item.className = 'scw-reset-columns-item';
+        action.role = 'button';
+        action.tabIndex = 0;
+        action.dataset.action = 'scwResetColumns';
+        action.title = label;
+        action.innerHTML = [
+            '<span class="item-icon fas fa-undo"></span>',
+            `<span class="item-text">${this.escapeHtml(label)}</span>`,
+        ].join(' ');
+
+        item.append(action);
+        menu.append(divider, item);
+    }
+
+    escapeHtml(value) {
+        const element = document.createElement('span');
+
+        element.textContent = value;
+
+        return element.innerHTML;
+    }
+
     onSettingsClick(event) {
+        this.ensureResetAction();
+
+        const resetAction = event.target.closest(
+            '[data-action="scwResetColumns"]'
+        );
+
+        if (resetAction) {
+            event.preventDefault();
+            event.stopPropagation();
+            this.closeSettingsMenu();
+            void this.resetColumns();
+
+            return;
+        }
+
         if (!event.target.closest('.dropdown-menu')) {
             return;
         }
@@ -137,6 +192,16 @@ export default class ListColumnManager {
         }
 
         this.settingsMenuOpen = false;
+    }
+
+    closeSettingsMenu() {
+        this.settingsMenuOpen = false;
+
+        const group = this.settingsElement?.querySelector('.btn-group');
+
+        group?.classList.remove('open');
+        group?.querySelector('.dropdown-toggle')
+            ?.setAttribute('aria-expanded', 'false');
     }
 
     initializeState() {
@@ -232,6 +297,24 @@ export default class ListColumnManager {
         }
 
         await this.view.collection.fetch();
+    }
+
+    async resetColumns() {
+        if (!this.administratorLayout) {
+            return;
+        }
+
+        this.store.clear();
+        this.state = this.store.load(this.administratorLayout);
+
+        try {
+            await this.refresh();
+        } catch (error) {
+            console.error(
+                'Smart Column Widths reset failed.',
+                error
+            );
+        }
     }
 
     dispose() {

@@ -1,4 +1,5 @@
 export const FIELD_MINIMUM_WIDTH = 56;
+export const RESIZE_HIT_TOLERANCE = 12;
 
 /**
  * @return {number}
@@ -30,6 +31,42 @@ export function calculateTableSizing(availableWidth, contentWidth) {
         fillerWidth,
         tableWidth: contentWidth + fillerWidth,
     };
+}
+
+/**
+ * Find the column whose trailing edge is close enough to the pointer.
+ * This coordinate-based hit test works on both sides of a boundary, even
+ * though EspoCRM clips content that overflows a header cell.
+ *
+ * @param {HTMLElement[]} headers
+ * @param {number} clientX
+ * @param {boolean} rtl
+ * @param {number} [tolerance]
+ * @return {HTMLElement|null}
+ */
+export function findHeaderAtResizeBoundary(
+    headers,
+    clientX,
+    rtl,
+    tolerance = RESIZE_HIT_TOLERANCE
+) {
+    let closest = null;
+    let closestDistance = tolerance + 1;
+
+    headers.forEach(header => {
+        const rect = header.getBoundingClientRect();
+        const boundary = rtl ? rect.left : rect.right;
+        const distance = Math.abs(clientX - boundary);
+
+        if (distance > tolerance || distance >= closestDistance) {
+            return;
+        }
+
+        closest = header;
+        closestDistance = distance;
+    });
+
+    return closest;
 }
 
 let measurementCanvas = null;

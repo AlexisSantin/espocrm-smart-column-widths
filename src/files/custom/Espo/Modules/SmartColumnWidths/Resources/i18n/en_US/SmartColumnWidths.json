@@ -7,6 +7,7 @@
         "No Columns": "No columns",
         "Reset All": "Reset all",
         "Reset Column Width": "Reset column width",
+        "Reset Order and Widths": "Reset order and widths",
         "Reset Order": "Reset order",
         "Resize Column": "Resize column",
         "Search Columns": "Search columns",
@@ -15,4 +16,3 @@
         "Visible Columns": "Visible columns"
     }
 }
-

@@ -58,23 +58,29 @@
 .scw-managed-table > thead > tr > th > .scw-resizer {
     display: block;
     height: 100%;
-    right: -5px;
+    right: -9px;
     top: 0;
-    width: 10px;
+    width: 18px;
     z-index: 4;
 }
 
 .scw-managed-table > thead > tr > th > .scw-resizer::after {
     border-right: 1px solid transparent;
     height: 18px;
-    right: 5px;
+    right: 9px;
     top: 10px;
     transition: border-color 100ms ease;
 }
 
 .scw-managed-table > thead > tr > th:hover > .scw-resizer::after,
-.scw-managed-table > thead > tr > th > .scw-resizer:hover::after {
+.scw-managed-table > thead > tr > th > .scw-resizer:hover::after,
+.scw-managed-table > thead > tr > th.scw-resize-hot > .scw-resizer::after {
     border-right-color: var(--gray-light);
+}
+
+.scw-managed-table.scw-resize-hot,
+.scw-managed-table.scw-resize-hot * {
+    cursor: col-resize !important;
 }
 
 .scw-managed-table .scw-filler-cell {

@@ -9,6 +9,7 @@ import {
 } from '../files/client/custom/modules/smart-column-widths/src/utils/column-state.js';
 import {
     constrainWidth,
+    findHeaderAtResizeBoundary,
     getFieldMinimumWidth,
 } from '../files/client/custom/modules/smart-column-widths/src/utils/field-sizing.js';
 
@@ -73,6 +74,17 @@ test('applying order preserves native visibility data', () => {
     );
 });
 
+test('an empty preference restores administrator order and widths', () => {
+    const state = reconcileState(null, [
+        {name: 'name', widthPx: 220},
+        {name: 'status', width: 20},
+        {name: 'assignedUser'},
+    ]);
+
+    assert.deepEqual(state.order, ['name', 'status', 'assignedUser']);
+    assert.deepEqual(state.widths, {});
+});
+
 test('all field types share the same compact minimum width', () => {
     assert.equal(getFieldMinimumWidth('name', 'varchar'), 56);
     assert.equal(getFieldMinimumWidth('emailAddress', 'email'), 56);
@@ -80,4 +92,30 @@ test('all field types share the same compact minimum width', () => {
     assert.equal(getFieldMinimumWidth('custom', 'unknown'), 56);
     assert.equal(constrainWidth(22.4, 56), 56);
     assert.equal(constrainWidth(147.6, 56), 148);
+});
+
+test('resize boundaries are easy to hit from both sides', () => {
+    const status = {
+        getBoundingClientRect: () => ({left: 40, right: 140}),
+    };
+    const pipeline = {
+        getBoundingClientRect: () => ({left: 140, right: 260}),
+    };
+
+    assert.equal(
+        findHeaderAtResizeBoundary([status, pipeline], 129, false),
+        status
+    );
+    assert.equal(
+        findHeaderAtResizeBoundary([status, pipeline], 151, false),
+        status
+    );
+    assert.equal(
+        findHeaderAtResizeBoundary([status, pipeline], 153, false),
+        null
+    );
+    assert.equal(
+        findHeaderAtResizeBoundary([status, pipeline], 151, true),
+        pipeline
+    );
 });
