@@ -1,6 +1,21 @@
 .scw-list {
     overflow-x: auto;
     overflow-y: visible;
+    scrollbar-color:
+        color-mix(in srgb, var(--scroll-thumb-bg) 15%, transparent)
+        transparent;
+}
+
+.scw-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.scw-list::-webkit-scrollbar-thumb {
+    background-color: color-mix(
+        in srgb,
+        var(--scroll-thumb-bg) 15%,
+        transparent
+    );
 }
 
 .scw-managed-table {
