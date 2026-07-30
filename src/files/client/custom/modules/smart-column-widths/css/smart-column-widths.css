@@ -8,13 +8,13 @@
 }
 
 .scw-managed-table > thead > tr > th.field-header-cell[data-name] {
-    padding-left: 24px;
+    padding-left: 22px;
     position: relative;
 }
 
 [dir="rtl"] .scw-managed-table > thead > tr > th.field-header-cell[data-name] {
     padding-left: var(--table-cell-padding);
-    padding-right: 24px;
+    padding-right: 22px;
 }
 
 .scw-managed-table .scw-drag-handle {
@@ -26,19 +26,19 @@
     display: flex;
     height: 24px;
     justify-content: center;
-    left: 3px;
+    left: 0;
     opacity: 0;
     padding: 0;
     position: absolute;
     top: 7px;
     transition: opacity 100ms ease;
-    width: 18px;
+    width: 20px;
     z-index: 2;
 }
 
 [dir="rtl"] .scw-managed-table .scw-drag-handle {
     left: auto;
-    right: 3px;
+    right: 0;
 }
 
 .scw-managed-table th:hover > .scw-drag-handle,
@@ -58,7 +58,7 @@
 .scw-managed-table > thead > tr > th > .scw-resizer {
     display: block;
     height: 100%;
-    right: -9px;
+    right: 0;
     top: 0;
     width: 18px;
     z-index: 4;
@@ -67,15 +67,33 @@
 .scw-managed-table > thead > tr > th > .scw-resizer::after {
     border-right: 1px solid transparent;
     height: 18px;
-    right: 9px;
+    right: 0;
     top: 10px;
     transition: border-color 100ms ease;
+}
+
+[dir="rtl"] .scw-managed-table > thead > tr > th > .scw-resizer {
+    left: 0;
+    right: auto;
+}
+
+[dir="rtl"] .scw-managed-table > thead > tr > th > .scw-resizer::after {
+    border-left: 1px solid transparent;
+    border-right: 0;
+    left: 0;
+    right: auto;
 }
 
 .scw-managed-table > thead > tr > th:hover > .scw-resizer::after,
 .scw-managed-table > thead > tr > th > .scw-resizer:hover::after,
 .scw-managed-table > thead > tr > th.scw-resize-hot > .scw-resizer::after {
     border-right-color: var(--gray-light);
+}
+
+[dir="rtl"] .scw-managed-table > thead > tr > th:hover > .scw-resizer::after,
+[dir="rtl"] .scw-managed-table > thead > tr > th > .scw-resizer:hover::after,
+[dir="rtl"] .scw-managed-table > thead > tr > th.scw-resize-hot > .scw-resizer::after {
+    border-left-color: var(--gray-light);
 }
 
 .scw-managed-table.scw-resize-hot,

@@ -122,7 +122,7 @@ test('reset can go below the resize minimum when columns cannot fit', () => {
     });
 });
 
-test('resize boundaries are easy to hit from both sides', () => {
+test('resize boundaries stay inside their column and clear of drag handles', () => {
     const status = {
         getBoundingClientRect: () => ({left: 40, right: 140}),
     };
@@ -131,19 +131,23 @@ test('resize boundaries are easy to hit from both sides', () => {
     };
 
     assert.equal(
-        findHeaderAtResizeBoundary([status, pipeline], 129, false),
+        findHeaderAtResizeBoundary([status, pipeline], 128, false),
         status
     );
     assert.equal(
-        findHeaderAtResizeBoundary([status, pipeline], 151, false),
+        findHeaderAtResizeBoundary([status, pipeline], 140, false),
         status
     );
     assert.equal(
-        findHeaderAtResizeBoundary([status, pipeline], 153, false),
+        findHeaderAtResizeBoundary([status, pipeline], 141, false),
         null
     );
     assert.equal(
-        findHeaderAtResizeBoundary([status, pipeline], 151, true),
+        findHeaderAtResizeBoundary([status, pipeline], 152, true),
         pipeline
+    );
+    assert.equal(
+        findHeaderAtResizeBoundary([status, pipeline], 139, true),
+        null
     );
 });

@@ -112,8 +112,8 @@ export function fitColumnWidths(widthMap, availableWidth, minimum) {
 
 /**
  * Find the column whose trailing edge is close enough to the pointer.
- * This coordinate-based hit test works on both sides of a boundary, even
- * though EspoCRM clips content that overflows a header cell.
+ * Only the inside of the column is interactive. This keeps the resize area
+ * separate from the next column's reorder handle.
  *
  * @param {HTMLElement[]} headers
  * @param {number} clientX
@@ -133,9 +133,15 @@ export function findHeaderAtResizeBoundary(
     headers.forEach(header => {
         const rect = header.getBoundingClientRect();
         const boundary = rtl ? rect.left : rect.right;
-        const distance = Math.abs(clientX - boundary);
+        const distance = rtl ?
+            clientX - boundary :
+            boundary - clientX;
 
-        if (distance > tolerance || distance >= closestDistance) {
+        if (
+            distance < 0 ||
+            distance > tolerance ||
+            distance >= closestDistance
+        ) {
             return;
         }
 
