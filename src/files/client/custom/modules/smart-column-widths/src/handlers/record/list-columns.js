@@ -8,10 +8,12 @@ export default class ListColumnsSetupHandler {
     }
 
     process() {
+        const existingManager = this.view._smartColumnWidthsManager;
+
         if (
             !this.view.entityType ||
             !this.view.header ||
-            this.view._smartColumnWidthsManager
+            existingManager && !existingManager.removed
         ) {
             return;
         }

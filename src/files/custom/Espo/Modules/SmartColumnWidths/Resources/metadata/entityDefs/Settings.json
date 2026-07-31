@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "smartColumnWidthsEnabled": {
+            "type": "bool",
+            "default": true,
+            "tooltip": true
+        },
+        "smartColumnWidthsAllEntities": {
+            "type": "bool",
+            "default": true,
+            "tooltip": true
+        },
+        "smartColumnWidthsEntityList": {
+            "type": "multiEnum",
+            "translation": "Global.scopeNamesPlural",
+            "view": "smart-column-widths:views/fields/entity-list",
+            "tooltip": true
+        }
+    }
+}

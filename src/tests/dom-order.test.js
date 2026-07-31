@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import {reorderNamedCells} from
+import {
+    canStartHeaderReorder,
+    reorderNamedCells,
+} from
     '../files/client/custom/modules/smart-column-widths/src/utils/dom-order.js';
 import {calculateTableSizing} from
     '../files/client/custom/modules/smart-column-widths/src/utils/field-sizing.js';
@@ -129,4 +132,35 @@ test('only the filler absorbs unused width', () => {
         calculateTableSizing(800, 900),
         {fillerWidth: 0, tableWidth: 900}
     );
+});
+
+test('header reorder starts only outside native interactive content', () => {
+    const originalElement = globalThis.Element;
+
+    class FakeElement {
+
+        constructor(interactive) {
+            this.interactive = interactive;
+        }
+
+        closest() {
+            return this.interactive ? {} : null;
+        }
+    }
+
+    globalThis.Element = FakeElement;
+
+    try {
+        assert.equal(
+            canStartHeaderReorder(new FakeElement(false)),
+            true
+        );
+        assert.equal(
+            canStartHeaderReorder(new FakeElement(true)),
+            false
+        );
+        assert.equal(canStartHeaderReorder(null), false);
+    } finally {
+        globalThis.Element = originalElement;
+    }
 });

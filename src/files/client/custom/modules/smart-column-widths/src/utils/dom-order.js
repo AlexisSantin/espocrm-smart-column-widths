@@ -32,3 +32,31 @@ export function reorderNamedCells(row, selector, order) {
             row.append(cell);
     });
 }
+
+const interactiveHeaderSelector = [
+    'a',
+    'button',
+    'input',
+    'select',
+    'textarea',
+    'label',
+    '[contenteditable="true"]',
+    '[data-action]',
+    '[role="button"]',
+    '.column-resizer',
+    '.scw-resizer',
+].join(', ');
+
+/**
+ * Allow reorder gestures only outside native interactive header content.
+ *
+ * @param {EventTarget|null} target
+ * @return {boolean}
+ */
+export function canStartHeaderReorder(target) {
+    if (!(target instanceof Element)) {
+        return false;
+    }
+
+    return !target.closest(interactiveHeaderSelector);
+}

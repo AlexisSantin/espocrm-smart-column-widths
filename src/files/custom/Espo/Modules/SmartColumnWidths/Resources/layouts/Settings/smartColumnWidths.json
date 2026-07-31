@@ -1,0 +1,25 @@
+[
+    {
+        "label": "Column Management",
+        "rows": [
+            [
+                {
+                    "name": "smartColumnWidthsEnabled"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "smartColumnWidthsAllEntities"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "smartColumnWidthsEntityList"
+                },
+                false
+            ]
+        ]
+    }
+]

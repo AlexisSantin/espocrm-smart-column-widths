@@ -1,5 +1,6 @@
 export const FIELD_MINIMUM_WIDTH = 56;
 export const RESIZE_HIT_TOLERANCE = 12;
+export const RESIZE_OUTSIDE_HIT_TOLERANCE = 6;
 
 /**
  * @return {number}
@@ -112,34 +113,40 @@ export function fitColumnWidths(widthMap, availableWidth, minimum) {
 
 /**
  * Find the column whose trailing edge is close enough to the pointer.
- * Only the inside of the column is interactive. This keeps the resize area
- * separate from the next column's reorder handle.
+ * The first pixels beyond the edge still belong to the preceding column so
+ * resizing takes priority over reordering around the visual separator.
  *
  * @param {HTMLElement[]} headers
  * @param {number} clientX
  * @param {boolean} rtl
- * @param {number} [tolerance]
+ * @param {number} [insideTolerance]
+ * @param {number} [outsideTolerance]
  * @return {HTMLElement|null}
  */
 export function findHeaderAtResizeBoundary(
     headers,
     clientX,
     rtl,
-    tolerance = RESIZE_HIT_TOLERANCE
+    insideTolerance = RESIZE_HIT_TOLERANCE,
+    outsideTolerance = RESIZE_OUTSIDE_HIT_TOLERANCE
 ) {
     let closest = null;
-    let closestDistance = tolerance + 1;
+    let closestDistance = Math.max(
+        insideTolerance,
+        outsideTolerance
+    ) + 1;
 
     headers.forEach(header => {
         const rect = header.getBoundingClientRect();
         const boundary = rtl ? rect.left : rect.right;
-        const distance = rtl ?
+        const insideDistance = rtl ?
             clientX - boundary :
             boundary - clientX;
+        const distance = Math.abs(insideDistance);
 
         if (
-            distance < 0 ||
-            distance > tolerance ||
+            insideDistance > insideTolerance ||
+            insideDistance < -outsideTolerance ||
             distance >= closestDistance
         ) {
             return;
@@ -201,6 +208,79 @@ function measureControls(element) {
     }, 0);
 }
 
+function getHorizontalSpacing(style, includePadding) {
+    return [
+        style.marginLeft,
+        style.marginRight,
+        style.borderLeftWidth,
+        style.borderRightWidth,
+        includePadding ? style.paddingLeft : 0,
+        includePadding ? style.paddingRight : 0,
+    ].reduce(
+        (total, value) => total + (parseFloat(value || '0') || 0),
+        0
+    );
+}
+
+function measureElementWidth(element) {
+    const style = window.getComputedStyle(element);
+
+    return Math.max(
+        element.scrollWidth,
+        element.getBoundingClientRect().width
+    ) + getHorizontalSpacing(style, false);
+}
+
+/**
+ * Measure only enum decorations omitted by canvas text measurement.
+ * Restricting the selectors prevents controls from other extensions from
+ * changing auto-fit widths for otherwise correct text and link fields.
+ *
+ * @param {HTMLElement} element
+ * @return {number}
+ */
+function measureEnumExtras(element) {
+    const iconWidth = [...element.querySelectorAll('.color-icon')]
+        .reduce((width, icon) => {
+            const spacing = icon.nextElementSibling;
+            const spacingWidth = spacing &&
+                !(spacing.textContent || '').trim() ?
+                measureElementWidth(spacing) :
+                0;
+
+            return width + measureElementWidth(icon) + spacingWidth;
+        }, 0);
+    const labelChrome = [...element.querySelectorAll('.label')]
+        .reduce(
+            (width, label) => width + getHorizontalSpacing(
+                window.getComputedStyle(label),
+                true
+            ),
+            0
+        );
+
+    return iconWidth + labelChrome;
+}
+
+/**
+ * @param {number} textWidth
+ * @param {number} extrasWidth
+ * @param {number} controlsWidth
+ * @param {number} padding
+ * @return {number}
+ */
+export function combineContentWidths(
+    textWidth,
+    extrasWidth,
+    controlsWidth,
+    padding
+) {
+    return Math.max(
+        textWidth + extrasWidth,
+        controlsWidth
+    ) + padding;
+}
+
 /**
  * @param {HTMLElement[]} elements
  * @param {number} minimum
@@ -213,14 +293,16 @@ export function measureContentWidth(elements, minimum, maximum = 520) {
         const padding =
             parseFloat(style.paddingLeft || '0') +
             parseFloat(style.paddingRight || '0');
-        const contentWidth = Math.max(
+        const contentWidth = combineContentWidths(
             measureText(element),
-            measureControls(element)
+            measureEnumExtras(element),
+            measureControls(element),
+            padding
         );
 
         return Math.max(
             width,
-            contentWidth + padding
+            contentWidth
         );
     }, minimum);
 

@@ -2,6 +2,8 @@ import ColumnStore from 'smart-column-widths:utils/column-store';
 import {applyOrderToLayout} from
     'smart-column-widths:utils/column-state';
 import {getFieldMinimumWidth} from 'smart-column-widths:utils/field-sizing';
+import isSmartColumnWidthsEnabledForEntity from
+    'smart-column-widths:utils/configuration';
 import ListTableController from
     'smart-column-widths:controllers/list-table';
 
@@ -26,9 +28,13 @@ export default class ListColumnManager {
         this.removed = false;
         this.settingsElement = null;
         this.settingsMenuOpen = false;
+        this.observedElement = null;
+        this.domObserver = null;
+        this.reconcileFrame = null;
 
         this.onSettingsClickBind = this.onSettingsClick.bind(this);
         this.onDocumentClickBind = this.onDocumentClick.bind(this);
+        this.onViewRemoveBind = this.onViewRemove.bind(this);
     }
 
     setup() {
@@ -49,13 +55,24 @@ export default class ListColumnManager {
             });
         });
         document.addEventListener('click', this.onDocumentClickBind);
-        this.view.once('remove', () => this.dispose());
+        this.view.on('remove', this.onViewRemoveBind);
     }
 
     afterRender() {
         if (this.removed || !this.view.element) {
             return;
         }
+
+        if (
+            !isSmartColumnWidthsEnabledForEntity(
+                this.view.getConfig(),
+                this.entityType
+            )
+        ) {
+            return;
+        }
+
+        this.disableNativeColumnResize();
 
         if (!this.state) {
             this.initializeState();
@@ -65,7 +82,101 @@ export default class ListColumnManager {
             return;
         }
 
+        this.observeViewDom();
         this.tableController.attach();
+        this.bindPersistentSettingsMenu();
+    }
+
+    onViewRemove(options = {}) {
+        if (options.ignoreCleaning) {
+            this.suspend();
+
+            return;
+        }
+
+        this.dispose();
+    }
+
+    disableNativeColumnResize() {
+        const helper = this.view._listSettingsHelper;
+
+        if (!helper?.getColumnResize?.()) {
+            return;
+        }
+
+        helper.storeColumnResize(false);
+    }
+
+    observeViewDom() {
+        const element = this.view.element;
+
+        if (!element || this.observedElement === element) {
+            return;
+        }
+
+        this.domObserver?.disconnect();
+        this.observedElement = element;
+        this.domObserver = new MutationObserver(() => {
+            this.scheduleDomReconcile();
+        });
+        this.domObserver.observe(element, {
+            childList: true,
+            subtree: true,
+        });
+    }
+
+    scheduleDomReconcile() {
+        if (this.removed || this.reconcileFrame !== null) {
+            return;
+        }
+
+        this.reconcileFrame = window.requestAnimationFrame(() => {
+            this.reconcileFrame = null;
+
+            if (this.removed || !this.view.element) {
+                return;
+            }
+
+            try {
+                this.reconcileDom();
+            } catch (error) {
+                console.error(
+                    'Smart Column Widths DOM reconciliation failed.',
+                    error
+                );
+            }
+        });
+    }
+
+    reconcileDom() {
+        const table = this.view.element.querySelector('.list > table');
+        const rows = table ?
+            [...table.querySelectorAll(':scope > tbody > tr.list-row')] :
+            [];
+        const headers = table ?
+            [
+                ...table.querySelectorAll(
+                    ':scope > thead > tr > ' +
+                    'th.field-header-cell[data-name]'
+                ),
+            ] :
+            [];
+        const needsTableAttach = table !== this.tableController.table ||
+            Boolean(table) && (
+                !table.classList.contains('scw-managed-table') ||
+                !table.querySelector(':scope > colgroup.scw-colgroup') ||
+                headers.some(header =>
+                    !header.querySelector(':scope > .scw-resizer')
+                ) ||
+                rows.some(row =>
+                    !row.querySelector(':scope > .scw-filler-cell')
+                )
+            );
+
+        if (needsTableAttach) {
+            this.tableController.attach();
+        }
+
         this.bindPersistentSettingsMenu();
     }
 
@@ -322,14 +433,38 @@ export default class ListColumnManager {
         }
     }
 
-    dispose() {
-        this.removed = true;
-        document.removeEventListener('click', this.onDocumentClickBind);
+    suspend() {
+        this.domObserver?.disconnect();
+        this.domObserver = null;
+        this.observedElement = null;
+
+        if (this.reconcileFrame !== null) {
+            window.cancelAnimationFrame(this.reconcileFrame);
+            this.reconcileFrame = null;
+        }
+
         this.settingsElement?.removeEventListener(
             'click',
             this.onSettingsClickBind
         );
         this.settingsElement = null;
+        this.settingsMenuOpen = false;
+        this.tableController.detachTable();
+    }
+
+    dispose() {
+        if (this.removed) {
+            return;
+        }
+
+        this.removed = true;
+        this.suspend();
+        document.removeEventListener('click', this.onDocumentClickBind);
+        this.view.off('remove', this.onViewRemoveBind);
         this.tableController.dispose();
+
+        if (this.view._smartColumnWidthsManager === this) {
+            delete this.view._smartColumnWidthsManager;
+        }
     }
 }

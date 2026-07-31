@@ -1,5 +1,6 @@
 {
     "name": "espocrm/ext-smart-column-widths",
+    "license": "GPL-3.0-or-later",
     "require": {
         "php": ">=8.3"
     },

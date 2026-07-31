@@ -395,6 +395,5 @@ npm update
 
 ## License
 
-(change this section after initialization)
-
-Change the license in `LICENSE` file. The current license is intended for scripts of this repository. It's not supposed to be used for code of your extension.
+Smart Column Widths is free software licensed under the
+[GNU General Public License v3.0 or later](LICENSE).

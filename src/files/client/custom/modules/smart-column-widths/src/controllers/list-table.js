@@ -5,7 +5,10 @@ import {
     findHeaderAtResizeBoundary,
     measureContentWidth,
 } from 'smart-column-widths:utils/field-sizing';
-import {reorderNamedCells} from
+import {
+    canStartHeaderReorder,
+    reorderNamedCells,
+} from
     'smart-column-widths:utils/dom-order';
 
 export default class ListTableController {
@@ -114,23 +117,6 @@ export default class ListTableController {
                 'labels',
                 'SmartColumnWidths'
             );
-
-            if (!header.querySelector(':scope > .scw-drag-handle')) {
-                const handle = document.createElement('button');
-
-                handle.type = 'button';
-                handle.className = 'scw-drag-handle';
-                handle.tabIndex = -1;
-                handle.title = this.manager.view.translate(
-                    'Move Column',
-                    'labels',
-                    'SmartColumnWidths'
-                );
-                handle.setAttribute('aria-label', handle.title);
-                handle.innerHTML =
-                    '<span class="fas fa-grip-vertical fa-sm"></span>';
-                header.prepend(handle);
-            }
         });
     }
 
@@ -300,7 +286,9 @@ export default class ListTableController {
 
     onPointerDown(event) {
         const resizer = event.target.closest('.scw-resizer');
-        const dragHandle = event.target.closest('.scw-drag-handle');
+        const reorderHeader = event.target.closest(
+            'th.field-header-cell[data-name]:not(.action-cell)'
+        );
         const header = resizer?.closest('th[data-name]') ||
             this.getResizeHeaderAtPointer(event);
 
@@ -310,8 +298,11 @@ export default class ListTableController {
             return;
         }
 
-        if (dragHandle) {
-            this.startReorder(event, dragHandle);
+        if (
+            reorderHeader &&
+            canStartHeaderReorder(event.target)
+        ) {
+            this.startReorder(event, reorderHeader);
         }
     }
 
@@ -347,12 +338,12 @@ export default class ListTableController {
         this.bindWindowPointerEvents();
     }
 
-    startReorder(event, handle) {
+    startReorder(event, source) {
         if (!event.isPrimary || event.button !== 0) {
             return;
         }
 
-        const header = handle.closest('th[data-name]');
+        const header = source.closest('th[data-name]');
         const name = header?.dataset.name;
 
         if (!name) {

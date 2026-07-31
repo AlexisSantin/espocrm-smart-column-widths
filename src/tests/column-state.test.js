@@ -8,11 +8,14 @@ import {
     reconcileState,
 } from '../files/client/custom/modules/smart-column-widths/src/utils/column-state.js';
 import {
+    combineContentWidths,
     constrainWidth,
     fitColumnWidths,
     findHeaderAtResizeBoundary,
     getFieldMinimumWidth,
 } from '../files/client/custom/modules/smart-column-widths/src/utils/field-sizing.js';
+import isSmartColumnWidthsEnabledForEntity from
+    '../files/client/custom/modules/smart-column-widths/src/utils/configuration.js';
 
 test('eligible columns follow the active administrator layout', () => {
     const items = getEligibleLayoutItems([
@@ -26,6 +29,37 @@ test('eligible columns follow the active administrator layout', () => {
     assert.deepEqual(
         items.map(item => item.name),
         ['name', 'status']
+    );
+});
+
+test('entity configuration defaults to enabled and applies restrictions', () => {
+    const createConfig = values => ({
+        get: name => values[name],
+    });
+
+    assert.equal(
+        isSmartColumnWidthsEnabledForEntity(createConfig({}), 'Lead'),
+        true
+    );
+    assert.equal(
+        isSmartColumnWidthsEnabledForEntity(createConfig({
+            smartColumnWidthsEnabled: false,
+        }), 'Lead'),
+        false
+    );
+    assert.equal(
+        isSmartColumnWidthsEnabledForEntity(createConfig({
+            smartColumnWidthsAllEntities: false,
+            smartColumnWidthsEntityList: ['Lead', 'Account'],
+        }), 'Lead'),
+        true
+    );
+    assert.equal(
+        isSmartColumnWidthsEnabledForEntity(createConfig({
+            smartColumnWidthsAllEntities: false,
+            smartColumnWidthsEntityList: ['Account'],
+        }), 'Lead'),
+        false
     );
 });
 
@@ -95,6 +129,17 @@ test('all field types share the same compact minimum width', () => {
     assert.equal(constrainWidth(147.6, 56), 148);
 });
 
+test('auto-fit can include targeted enum decoration widths', () => {
+    assert.equal(
+        combineContentWidths(72, 14, 8, 16),
+        102
+    );
+    assert.equal(
+        combineContentWidths(50, 10, 0, 16),
+        76
+    );
+});
+
 test('reset widths fit the viewport without horizontal overflow', () => {
     const fitted = fitColumnWidths(
         {name: 240, status: 140, emailAddress: 220},
@@ -122,7 +167,7 @@ test('reset can go below the resize minimum when columns cannot fit', () => {
     });
 });
 
-test('resize boundaries stay inside their column and clear of drag handles', () => {
+test('resize boundaries take priority on both sides of separators', () => {
     const status = {
         getBoundingClientRect: () => ({left: 40, right: 140}),
     };
@@ -139,7 +184,11 @@ test('resize boundaries stay inside their column and clear of drag handles', () 
         status
     );
     assert.equal(
-        findHeaderAtResizeBoundary([status, pipeline], 141, false),
+        findHeaderAtResizeBoundary([status, pipeline], 146, false),
+        status
+    );
+    assert.equal(
+        findHeaderAtResizeBoundary([status, pipeline], 147, false),
         null
     );
     assert.equal(
@@ -147,7 +196,11 @@ test('resize boundaries stay inside their column and clear of drag handles', () 
         pipeline
     );
     assert.equal(
-        findHeaderAtResizeBoundary([status, pipeline], 139, true),
+        findHeaderAtResizeBoundary([status, pipeline], 134, true),
+        pipeline
+    );
+    assert.equal(
+        findHeaderAtResizeBoundary([status, pipeline], 133, true),
         null
     );
 });
