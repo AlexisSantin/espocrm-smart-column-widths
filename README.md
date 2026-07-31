@@ -1,399 +1,350 @@
-# Template repository for EspoCRM extensions
+# Smart Column Widths for EspoCRM
 
-Create a repository for your extension from this template.
+Smart Column Widths makes EspoCRM list columns easier to resize, reorder and
+restore. It replaces the optional native column-resize mode with a consistent
+desktop interaction while keeping EspoCRM's list layouts, sorting, column
+visibility and access control intact.
 
-(rename the header after initialization and change the text of the paragraph)
+Current version: **0.2.0**
 
-## Preparing repository
+## Features
 
-(remove this section after initialization)
+### Resize any visible column
 
-Run:
+- Move the pointer near the right edge of a column header to reveal the
+  resize cursor.
+- Drag the boundary to change only that column's width.
+- The interaction area extends a few pixels on both sides of the separator,
+  making the boundary easier to acquire without requiring pixel-perfect
+  positioning.
+- Column widths have a compact common minimum, including text, links,
+  enumerations and boolean fields.
+- Resizing one column does not redistribute the remaining space between the
+  other columns.
+- When the total width exceeds the list container, EspoCRM's horizontal
+  scrolling remains available.
 
+The native **Column Resize** toggle is hidden while Smart Column Widths is
+active because resizing is always available directly from the headers.
+
+### Double-click to auto-fit
+
+Double-click a column boundary to fit that column to its rendered content.
+
+Auto-fit measures the current list rows and accounts for:
+
+- text and links;
+- email addresses and phone numbers;
+- enum labels and their color indicators;
+- badges and other label decoration;
+- checkboxes and form controls;
+- field padding and borders.
+
+The result keeps a compact minimum and a safe maximum so that a single long
+value cannot create an excessively wide column.
+
+### Reorder complete columns
+
+- Drag an unused area of a column header to move the column.
+- The header and every corresponding row cell move together.
+- A short movement is ignored to prevent accidental reordering.
+- Native interactive content has priority. Clicking a sortable header label,
+  link, button or resize boundary keeps its original EspoCRM action.
+- A visual guide shows the destination while dragging.
+
+Reordering changes only the current user's presentation. It does not modify
+the administrator's list layout.
+
+### Persistent personal layout
+
+Widths and order are stored locally through EspoCRM's browser storage.
+Preferences are separated by:
+
+- EspoCRM user;
+- entity type;
+- list layout.
+
+Each user can therefore organize Leads, Contacts, Accounts and custom
+entities independently without affecting other users.
+
+Preferences stay on the same browser and computer. They are not synchronized
+between devices. Clearing the browser's site storage also clears these
+personal column preferences.
+
+### Safe layout reconciliation
+
+Smart Column Widths always starts from the current list layout configured by
+an administrator.
+
+When that layout changes:
+
+- newly activated columns are inserted into the personal order;
+- removed columns are discarded from stored preferences;
+- hidden or unauthorized fields cannot be restored from local storage;
+- native column-visibility choices remain untouched.
+
+Only columns active in EspoCRM's **Administration → Entity Manager → Layouts
+→ List** layout are managed by the extension.
+
+### Column menu behavior
+
+EspoCRM's native list settings menu remains responsible for showing and
+hiding columns. The menu stays open while column choices are changed, making
+it possible to configure several columns without reopening it each time.
+
+Smart Column Widths adds:
+
+**Reset Order and Widths**
+
+This action:
+
+- clears the current user's stored order and widths for that list;
+- restores the order from the administrator's current list layout;
+- recalculates initial widths for the available list area;
+- keeps the default view contained in the viewport whenever the number of
+  columns makes that possible.
+
+It does not reset which fields are active in the administrator's layout.
+
+### Reliable EspoCRM navigation
+
+EspoCRM caches some list views when users move between entities. Smart Column
+Widths handles that lifecycle explicitly, so resizing and reordering remain
+active after navigating away from a list and returning to it.
+
+The extension also observes list re-rendering after pagination, sorting,
+searches and column changes, then reapplies the saved column model without
+replacing the whole EspoCRM list view.
+
+## Administration
+
+After installation, open:
+
+**Administration → Customization → Smart Column Widths**
+
+The page provides three settings:
+
+- **Enable enhanced column management** — global on/off switch.
+- **Enable for all entities** — enables the extension for every compatible
+  entity.
+- **Enabled entities** — when the previous option is disabled, selects the
+  entities on which Smart Column Widths is available.
+
+The entity selector supports standard and custom object entities. Existing
+installations remain enabled until an administrator explicitly restricts the
+feature.
+
+## Permissions and ACL
+
+The extension does not grant access to records, entities or fields.
+
+EspoCRM filters the list layout using the current user's entity and
+field-level read permissions before Smart Column Widths receives it. Stored
+orders and widths are then reconciled only against those authorized columns.
+
+The administration page uses EspoCRM's native Settings model:
+
+- only administrators can open the administration route;
+- the server rejects configuration updates from non-administrators;
+- the enabled-entity list is filtered according to the current user's scope
+  access.
+
+Smart Column Widths changes only table presentation. It does not create,
+read, update or delete CRM records through a custom API.
+
+## Screenshots
+
+<!--
+Suggested screenshots to add before the public release:
+
+1. Resizing a column from its header boundary.
+2. Reordering a complete column.
+3. The list settings menu with "Reset Order and Widths".
+4. Administration > Customization > Smart Column Widths.
+-->
+
+## Installation
+
+1. Download `smart-column-widths-0.2.0.zip` from the
+   [latest GitHub release](https://github.com/AlexisSantin/espocrm-smart-column-widths/releases/latest).
+2. In EspoCRM, open **Administration → Extensions**.
+3. Upload the ZIP file without extracting it.
+4. Install the extension.
+5. Reload EspoCRM in the browser.
+6. Configure the enabled entities under
+   **Administration → Customization → Smart Column Widths**.
+
+### Upgrade
+
+Download the newer ZIP and install it from **Administration → Extensions**.
+Personal browser widths and orders, as well as administration settings, are
+preserved.
+
+### Uninstall
+
+Uninstall the extension from **Administration → Extensions**. CRM records and
+administrator list layouts are never modified by the extension.
+
+Local browser preferences may remain in site storage after uninstalling, but
+they are harmless and are ignored when the extension is absent.
+
+## Requirements and compatibility
+
+- EspoCRM `>= 10.0.0`
+- PHP `>= 8.3`
+- A modern desktop browser
+
+Version 0.2.0 has been developed and tested against EspoCRM 10.0.3.
+
+Resize handles are intentionally hidden on small mobile viewports, where
+horizontal touch scrolling has priority.
+
+## Interaction reference
+
+| Action | Result |
+| --- | --- |
+| Hover near a header boundary | Shows the column-resize cursor |
+| Drag a header boundary | Changes only that column's width |
+| Double-click a header boundary | Auto-fits the column to rendered content |
+| Drag empty header space | Moves the header and all corresponding cells |
+| Click a sortable header label | Keeps EspoCRM's native sorting |
+| Change visible columns | Keeps the native column menu open |
+| Reset Order and Widths | Restores administrator order and recalculates widths |
+| Navigate away and return | Restores the personal layout |
+
+## Troubleshooting
+
+### Resize handles are not available
+
+Check that:
+
+- Smart Column Widths is enabled globally;
+- the current entity is enabled in the extension settings;
+- the browser viewport is wider than the mobile breakpoint;
+- the extension is installed and enabled under
+  **Administration → Extensions**.
+
+Reload the browser without cache after installing or upgrading. Depending on
+the browser, use `Ctrl+Shift+R` or `Ctrl+F5`.
+
+### Widths differ on another browser or computer
+
+This is expected. Preferences are stored locally for fast, per-device
+feedback and are not server-side user preferences.
+
+### An administrator changed the list layout
+
+Reload the list. Smart Column Widths automatically reconciles personal
+preferences with the latest active fields and discards obsolete entries.
+
+### Restore the default presentation
+
+Open the list settings menu and choose **Reset Order and Widths**. To remove
+all local preferences for the site, clear the site's browser storage.
+
+### The native Column Resize option reappears
+
+Reload without cache and clear EspoCRM's application cache. If the problem
+persists, include the EspoCRM version, browser and reproduction steps in a
+GitHub issue.
+
+## Repository structure
+
+This repository is based on the official
+[EspoCRM extension template](https://github.com/espocrm/ext-template).
+
+Important paths:
+
+```text
+src/                 Extension source and packaged files
+src/files/           Files installed into EspoCRM
+src/tests/           JavaScript behavior and metadata tests
+build/               Generated installable ZIP packages
+site/                Local EspoCRM development instance
 ```
-php init.php
-```
 
-It will ask to enter an extension name and some other information. After the initialization, the script will prompt you to run `npm install`.
+Develop the extension only in `src`. The `site` directory is a generated
+development copy and must not be edited directly.
 
-After initialization, placeholders in the readme file will be replaced with values specific to your extension.
-Use the changed readme as the documentation.
+## Development
 
-After initialization, you can remove `init.php` file from your repository. Commit the changes and proceed to configuration & building.
+### Prerequisites
 
-## Configuration
+- Node.js 18 or newer
+- npm 8 or newer
+- PHP 8.3 or newer
+- Composer
+- a local EspoCRM development environment
 
-Create `config.json` file in the root directory. You can copy `config-default.json` and rename it to `config.json`.
+### Initial setup
 
-When reading, this config will be merged with `config-default.json`. You can override default parameters in the created config.
-
-Parameters:
-
-* espocrm.repository – from what repository to fetch EspoCRM;
-* espocrm.branch – what branch to fetch (`stable` is set by default); you can specify version number instead (e.g. `9.1.0`);
-* database - credentials of the dev database;
-* install.siteUrl – site url of the dev instance;
-* install.defaultOwner – a webserver owner (important to be set right);
-* install.defaultGroup – a webserver group (important to be set right).
-
-
-## Config for EspoCRM instance
-
-You can override EspoCRM config. Create `config.php` in the root directory of the repository. This file will be applied after EspoCRM installation (when building).
-
-Example:
-
-```php
-<?php
-return [
-    'useCacheInDeveloperMode' => true,
-];
-```
-
-## Building
-
-After building, EspoCRM instance with installed extension will be available at `site` directory. You will be able to access it with credentials:
-
-* Username: admin
-* Password: 1
-
-### Preparation
-
-1. You need to have *node*, *npm*, *composer* installed.
-2. Run `npm install` (or `npm ci` if you are not building the extension from scratch).
-3. Create a database. Note that without the created database instance building will fail. The database name is set in the config file. You can change it.
-
-### Full EspoCRM instance building
-
-It will download EspoCRM (from the repository specified in the config), then build and install it (in the `site` directory). Then, it will install the extension in the instance.
-
-Command:
-
-```
+```bash
+npm install
+cp config-default.json config.json
 npm run all
 ```
 
-Note: If an error occurred, check `site/data/logs/` for details. It's often a database is not created.
+Adapt `config.json` to the local database and EspoCRM URL before running the
+full build.
 
-The command removes the previously installed EspoCRM instance, but keep the database intact. Use this command to update the dev instance to the latest version or to any specific version (*espocrm.branch* parameter in the config).
+### Daily workflow
 
-After the instance is ready, if your webserver is run under another user, you might need to fix file [ownership](https://docs.espocrm.com/administration/server-configuration/#ownership) (in the `site` directory).
-
-### Copying extension files to EspoCRM instance
-
-You need to run this command every time you make changes in `src` directory, and you want to try these changes on Espo instance.
-
-Command:
-
-```
+```bash
+# Copy source changes into the development EspoCRM instance.
 npm run sync
-```
 
-To avoid running this command manually, use a file watcher in your IDE. The configuration for PhpStorm is included in this repository and enabled by default (no need any extra configuration). See below about the file watcher.
+# Clear EspoCRM cache after metadata changes.
+npm run clear-cache
 
-### Running after-install script
+# Run behavior and package metadata tests.
+npm test
 
-AfterInstall.php will be applied for EspoCRM instance.
-
-Command:
-
-```
-node build --after-install
-```
-
-### Extension package building
-
-Command:
-
-```
+# Build the installable extension.
 npm run extension
 ```
 
-The package will be created in `build` directory.
+The generated package is written to:
 
-Note: The version number is taken from `package.json`.
-
-### Installing addition extensions
-
-If your extension requires other extensions, there is a way to install them automatically while building the instance.
-
-Necessary steps:
-
-1. Add the current EspoCRM version to the `config.php`:
-
-    ```php
-    <?php
-    return [
-        'version' => '9.3.0',
-    ];
-    ```
-
-2. Create the `extensions` directory in the root directory of your repository.
-3. Put needed extensions (e.g. `my-extension-1.0.0.zip`) in this directory.
-
-Extensions will be installed automatically after running the command `node build --all` or `node build --install`.
-
-## Development workflow
-
-1. Do development in `src` dir.
-2. Run `npm run sync`.
-3. Test changes in EspoCRM instance at `site` dir.
-
-## Using entity manager to create entities
-
-You can block out new entity types right in Espo (using Entity Manager) and then copy generated custom files (`site/custom` dir) to the repository (`src` dir) using `copy-custom.js` script.
-
-1. Create entity types, fields, layouts, relationships in Espo (it should be available in `site` dir after building).
-2. Run `node copy-custom.js`. It will copy all files from `site/custom` to `src/files/custom/Espo/Modules/SmartColumnWidths` and apply needed modifications to files.
-3. Remove files from `site/custom`.
-4. Run `npm run sync`. It will copy files from the repository to Espo build (`site/custom//Espo/Modules/SmartColumnWidths` dir).
-5. Clear cache in Espo.
-6. Test in Espo.
-7. Commit changes.
-
-You can remove `copy-custom.js` from the repository if you don't plan to use it future.
-
-## Using composer in extension
-
-If your extension requires additional libraries, they can be installed by composer:
-
-1. Create a file `src/files/custom/Espo/Modules/SmartColumnWidths/composer.json` with your dependencies. You can change dir to this directory and add composer dependencies using *composer require*.
-2. Once you run `node build --all` or `node build --composer-install`, composer dependencies will be automatically installed.
-3. Create a file `src/files/custom/Espo/Modules/SmartColumnWidths/Resources/autoload.json`.
-
-Note: The extension build will contain only the `vendor` directory without the `composer.json` file.
-
-The `autoload.json` file defines paths for namespaces:
-
-```json
-{
-    "psr-4": {
-        "LibraryNamespace\\": "custom/Espo/Modules/SmartColumnWidths/vendor/<vendor-name>/<library-name>/path/to/src"
-    }
-}
+```text
+build/smart-column-widths-<version>.zip
 ```
 
-This definition is needed because in EspoCRM extensions are not installed via composer, they are included in runtime.
+## Contributing
 
-For static analysis, add to `phpstan.neon`:
+Issues and pull requests are welcome.
 
-```
-    excludePaths:
-        - src/files/custom/Espo/Modules/SmartColumnWidths/vendor
-    scanDirectories:
-        - site/custom/Espo/Modules/SmartColumnWidths/vendor
-```
+When contributing:
 
-## Versioning
+1. Keep extension changes in `src`.
+2. Preserve EspoCRM's native sorting, visibility and list interactions.
+3. Respect entity, record and field-level ACL.
+4. Inspect the implementation in the supported EspoCRM version before using
+   an internal list-view property.
+5. Add or update tests for behavior changes.
+6. Run `npm test` and build the ZIP before opening a pull request.
 
-The version number is stored in `package.json` and `package-lock.json`.
+## Support
 
-Bumping version:
+Use GitHub Issues for reproducible bugs and feature requests. Include:
 
-```
-npm version patch
-npm version minor
-npm version major
-```
+- the Smart Column Widths version;
+- the EspoCRM version;
+- the browser and operating system;
+- the affected entity and field types;
+- reproduction steps;
+- relevant browser-console or EspoCRM log messages.
 
-## Tests
+## Security
 
-To prepare an Espo instance for tests, run:
-
-```
-npm run prepare-test
-```
-
-It downloads the Espo package, unzips it in the *site* directory, and then runs composer install. To be used for unit tests and static analysis in CI environment as it takes less time than the full installation (with database).
-
-### Unit tests
-
-You need to install composer dev dependencies in the root first:
-
-```
-composer install
-```
-
-This root composer serves only for unit tests static analysis.
-
-Command to run unit tests:
-
-```
-vendor/bin/phpunit
-```
-
-or with a path:
-
-```
-vendor/bin/phpunit tests/unit/Espo/Modules/SmartColumnWidths
-```
-
-or:
-
-```
-npm run unit-tests
-```
-
-Unit tests should be placed in `tests/unit/Espo/Modules/SmartColumnWidths` directory and be in `tests\unit\Espo\Modules\SmartColumnWidths`
-namespace.
-
-### Static analysis
-
-You need to install composer dev dependencies in the root first:
-
-```
-composer install
-```
-
-Command to run static analysis:
-
-```
-vendor/bin/phpstan
-```
-
-or:
-
-```
-npm run sa
-```
-
-PHPStan scans sources in the *src* and *site* directories as it's configured in *phpstan.neon*.
-
-### Integration tests
-
-Integrations tests are run from the *site* directory.
-
-You need to build a test instance first:
-
-1. `npm run sync`
-2. `(cd site; grunt test)`
-
-    You need to create a config file `tests/integration/config.php`:
-
-    ```php
-    <?php
-
-    return [
-        'database' => [
-            'driver' => 'pdo_mysql',
-            'host' => 'localhost',
-            'charset' => 'utf8mb4',
-            'dbname' => 'TEST_DB_NAME',
-            'user' => 'YOUR_DB_USER',
-            'password' => 'YOUR_DB_PASSWORD',
-        ],
-    ];
-    ```
-
-Command to run integration tests:
-
-```
-(npm run sync; cd site; vendor/bin/phpunit tests/integration/Espo/Modules/SmartColumnWidths)
-```
-
-or:
-
-```
-npm run integration-tests
-```
-
-Note that integration tests needs the full Espo installation.
-
-Integration tests should be placed in `tests/integration/Espo/Modules/SmartColumnWidths` directory
-and be in `tests\integration\Espo\Modules\SmartColumnWidths` namespace.
-
-### GitHub workflow
-
-A workflow running unit tests and static analysis is defined in `.github/workflows/test.yml.disabled`.
-Remove `.disabled` from the filename to activate the workflow.
-
-## Configuring IDE
-
-You need to set the following paths to be ignored in your IDE:
-
-* `build`
-* `site/build`
-* `site/custom/`
-* `site/client/custom/`
-* `site/tests/unit/Espo/Modules/SmartColumnWidths`
-* `site/tests/integration/Espo/Modules/SmartColumnWidths`
-
-### File watcher
-
-Note: The File Watcher configuration for PhpStorm is included in this repository (no need to configure).
-
-You can set up a file watcher in the IDE to automatically copy and transpile files upon saving.
-
-File watcher parameters for PhpStorm:
-
-* Program: `node`
-* Arguments: `build --copy-file --file=$FilePathRelativeToProjectRoot$`
-* Working Directory: `$ProjectFileDir$`
-
-## Using ES modules
-
-The initialization script asks whether you want to use ES6 modules. It's recommended to choose "YES".
-
-If you have chosen No and want to switch to ES6 later, then:
-
-1. Set *bundled* to true in `extension.json`.
-2. Set *bundled* and *jsTranspiled* to true in `src/files/custom/Espo/Modules/SmartColumnWidths/Resources/module.json`.
-3. Add `src/files/custom/Espo/Modules/SmartColumnWidths/Resources/metadata/app/client.json`
-    ```json
-    {
-        "scriptList": [
-            "__APPEND__",
-            "client/custom/modules/smart-column-widths/lib/init.js"
-        ]
-    }
-    ```
-
-## JavaScript frontend libraries
-
-Install *rollup*.
-
-In `extension.json`, add a command that will bundle the needed library into an AMD module. Example:
-
-```json
-{
-    "scripts": [
-        "npx rollup node_modules/some-lib/build/esm/index.mjs --format amd --file build/assets/lib/some-lib.js --amd.id some-lib"
-    ]
-}
-```
-
-Add the library module path to `src/files/custom/Espo/Modules/SmartColumnWidths/Resources/metadata/app/jsLibs.json`
-
-```json
-{
-    "some-lib": {
-        "path": "client/custom/modules/smart-column-widths/lib/some-lib.js"
-    }
-}
-```
-
-When you build, the library module will be automatically included in the needed location.
-
-Note that you may also need to create *rollup.config.js* to set some additional Rollup parameters that are not supported via CLI usage.
-
-## Updating tooling libraries
-
-Update the version number of espo-extension-tools in package.json to the [latest one](https://github.com/espocrm/extension-tools/releases).
-
-Run:
-
-```
-npm update espo-extension-tools
-npm update espo-frontend-build-tools
-```
-
-Or just update everything:
-
-```
-npm update
-```
+Please do not publish credentials, customer records or other sensitive CRM
+data in an issue. Use anonymized examples and remove personal information
+from screenshots and logs.
 
 ## License
 
 Smart Column Widths is free software licensed under the
 [GNU General Public License v3.0 or later](LICENSE).
+
+## Author
+
+Created by Alex Santin.
