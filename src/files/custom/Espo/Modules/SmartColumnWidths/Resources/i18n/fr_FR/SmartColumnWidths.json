@@ -1,0 +1,18 @@
+{
+    "labels": {
+        "Columns": "Colonnes",
+        "Close": "Fermer",
+        "Hidden Columns": "Colonnes masquées",
+        "Move Column": "Déplacer la colonne",
+        "No Columns": "Aucune colonne",
+        "Reset All": "Tout réinitialiser",
+        "Reset Column Width": "Réinitialiser la largeur",
+        "Reset Order and Widths": "Réinitialiser l’ordre et les largeurs",
+        "Reset Order": "Réinitialiser l’ordre",
+        "Resize Column": "Redimensionner la colonne",
+        "Search Columns": "Rechercher une colonne",
+        "Show All": "Tout afficher",
+        "Toggle Column": "Afficher ou masquer la colonne",
+        "Visible Columns": "Colonnes visibles"
+    }
+}

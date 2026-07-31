@@ -1,11 +1,11 @@
 {
-    "module": "{@name}",
-    "name": "{@nameLabel}",
-    "description": "{@description}",
-    "author": "{@author}",
-    "bundled": {@bundled},
+    "module": "SmartColumnWidths",
+    "name": "Smart Column Widths",
+    "description": "Predictable and adaptive column resizing for EspoCRM list views.",
+    "author": "Alex Santin",
+    "bundled": true,
     "acceptableVersions": [
-        ">=9.3.0"
+        ">=10.0.0"
     ],
     "php": [
         ">=8.3"

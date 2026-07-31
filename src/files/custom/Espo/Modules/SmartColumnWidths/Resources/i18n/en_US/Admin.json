@@ -1,0 +1,11 @@
+{
+    "labels": {
+        "Smart Column Widths": "Smart Column Widths"
+    },
+    "descriptions": {
+        "smartColumnWidths": "Choose where enhanced column resizing and reordering are available."
+    },
+    "keywords": {
+        "smartColumnWidths": "column,width,resize,reorder,entity,configuration"
+    }
+}
