@@ -1,13 +1,7 @@
 # Smart Column Widths for EspoCRM
 
-> Turn every EspoCRM list into a faster, cleaner workspace.
-
-Smart Column Widths gives teams a polished way to resize, auto-fit, reorder and
-restore list columns — without changing administrator layouts or EspoCRM's
-native sorting, visibility and access control.
-
-Make columns fit the data. Keep the important fields in reach. Let every user
-work in the view that suits them.
+Smart Column Widths adds column resizing, double-click auto-fit, reordering and
+reset controls to EspoCRM list views.
 
 Current version: **0.2.2** · [Download the latest release](https://github.com/AlexisSantin/espocrm-smart-column-widths/releases/latest)
 
@@ -23,18 +17,6 @@ Current version: **0.2.2** · [Download the latest release](https://github.com/A
 | Change visible columns | Keeps the native column menu open |
 | Reset Order and Widths | Restores administrator order and recalculates widths |
 | Navigate away and return | Restores the personal layout |
-
-## Why teams choose Smart Column Widths
-
-- **Less scrolling, more signal.** Fit columns to real content instead of
-  guessing widths or losing important values behind ellipses.
-- **A personal workspace for every user.** Each user can save their own order
-  and widths for Leads, Contacts, Accounts and custom entities.
-- **Safe for your CRM.** EspoCRM's native sorting, visibility, navigation and
-  access rules remain in charge.
-- **Simple to roll out.** Administrators decide where the experience is
-  enabled, while users adjust their own presentation without affecting the
-  underlying layouts.
 
 ## Features
 
