@@ -1,6 +1,6 @@
 {
   "name": "espocrm-ext-smart-column-widths",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Predictable and adaptive column resizing for EspoCRM list views",
   "scripts": {
     "test": "node --test --test-reporter=spec src/tests/*.test.js",

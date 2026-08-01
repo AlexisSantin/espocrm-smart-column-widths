@@ -1,6 +1,7 @@
 export const FIELD_MINIMUM_WIDTH = 56;
 export const RESIZE_HIT_TOLERANCE = 12;
 export const RESIZE_OUTSIDE_HIT_TOLERANCE = 6;
+const AUTO_FIT_FALLBACK_PADDING = 8;
 
 /**
  * @return {number}
@@ -185,7 +186,8 @@ function measureText(element) {
 
 function measureControls(element) {
     return [...element.querySelectorAll(
-        'input, select, button, img, .fas, .far, .fab'
+        'input, select, button, img, svg, canvas, [role="img"], ' +
+        '.fas, .far, .fab'
     )].reduce((width, control) => {
         if (
             control instanceof HTMLInputElement &&
@@ -231,10 +233,164 @@ function measureElementWidth(element) {
     ) + getHorizontalSpacing(style, false);
 }
 
+function expandIntrinsicCloneContent(clone) {
+    const expandableDisplays = new Set([
+        'block',
+        'flex',
+        'grid',
+        'inline-block',
+        'inline-flex',
+        'inline-grid',
+        'list-item',
+        'table',
+        'table-cell',
+    ]);
+    const descendants = [...clone.querySelectorAll('*')];
+
+    for (let pass = 0; pass < 2; pass++) {
+        descendants.forEach(descendant => {
+            const style = window.getComputedStyle(descendant);
+
+            if (
+                style.display === 'none' ||
+                ['absolute', 'fixed'].includes(style.position)
+            ) {
+                return;
+            }
+
+            descendant.style.setProperty(
+                'overflow',
+                'visible',
+                'important'
+            );
+            descendant.style.setProperty(
+                'text-overflow',
+                'clip',
+                'important'
+            );
+            descendant.style.setProperty(
+                'white-space',
+                'nowrap',
+                'important'
+            );
+
+            const parent = descendant.parentElement;
+            const rect = descendant.getBoundingClientRect();
+            const parentRect = parent?.getBoundingClientRect();
+            const fillsParent = parentRect &&
+                rect.width >= parentRect.width - 1;
+            const overflows = descendant.scrollWidth > rect.width + 1;
+
+            if (
+                overflows ||
+                (fillsParent && expandableDisplays.has(style.display))
+            ) {
+                descendant.style.setProperty(
+                    'max-width',
+                    'none',
+                    'important'
+                );
+                descendant.style.setProperty(
+                    'width',
+                    'max-content',
+                    'important'
+                );
+            }
+        });
+    }
+}
+
 /**
- * Measure only enum decorations omitted by canvas text measurement.
- * Restricting the selectors prevents controls from other extensions from
- * changing auto-fit widths for otherwise correct text and link fields.
+ * Measure a cell's rendered contents without the current fixed column width
+ * constraining its layout. This deliberately works from the DOM rather than
+ * from field types: links, avatars, badges, icons, controls and custom field
+ * renderers all contribute whatever width they actually occupy.
+ *
+ * @param {HTMLElement} element
+ * @return {number}
+ */
+function measureIntrinsicElementWidth(element) {
+    if (
+        !element ||
+        typeof document === 'undefined' ||
+        !document.body ||
+        typeof element.cloneNode !== 'function'
+    ) {
+        return 0;
+    }
+
+    const sourceTable = element.closest?.('table');
+    const sourceRow = element.closest?.('tr');
+    const sourceList = element.closest?.('.list');
+    const host = document.createElement('div');
+    const table = document.createElement('table');
+    const body = document.createElement('tbody');
+    const row = document.createElement('tr');
+    const clone = element.cloneNode(true);
+
+    if (sourceList?.className) {
+        host.className = sourceList.className;
+    }
+
+    if (sourceTable?.className) {
+        table.className = sourceTable.className;
+    }
+
+    if (sourceRow?.className) {
+        row.className = sourceRow.className;
+    }
+
+    host.setAttribute('aria-hidden', 'true');
+    host.style.setProperty('height', 'auto', 'important');
+    host.style.setProperty('left', '-100000px', 'important');
+    host.style.setProperty('overflow', 'visible', 'important');
+    host.style.setProperty('pointer-events', 'none', 'important');
+    host.style.setProperty('position', 'fixed', 'important');
+    host.style.setProperty('top', '0', 'important');
+    host.style.setProperty('visibility', 'hidden', 'important');
+    host.style.setProperty('width', 'max-content', 'important');
+    host.style.setProperty('z-index', '-1', 'important');
+
+    table.style.setProperty('border-collapse', 'separate', 'important');
+    table.style.setProperty('height', 'auto', 'important');
+    table.style.setProperty('max-width', 'none', 'important');
+    table.style.setProperty('min-width', '0', 'important');
+    table.style.setProperty('table-layout', 'auto', 'important');
+    table.style.setProperty('width', 'max-content', 'important');
+
+    clone.style.setProperty('display', 'table-cell', 'important');
+    clone.style.setProperty('height', 'auto', 'important');
+    clone.style.setProperty('max-height', 'none', 'important');
+    clone.style.setProperty('max-width', 'none', 'important');
+    clone.style.setProperty('min-width', '0', 'important');
+    clone.style.setProperty('overflow', 'visible', 'important');
+    clone.style.setProperty('white-space', 'nowrap', 'important');
+    clone.style.setProperty('width', 'max-content', 'important');
+
+    row.append(clone);
+    body.append(row);
+    table.append(body);
+    host.append(table);
+    document.body.append(host);
+
+    try {
+        expandIntrinsicCloneContent(clone);
+
+        const rect = clone.getBoundingClientRect();
+
+        return Math.max(
+            Number(clone.scrollWidth) || 0,
+            Number(rect.width) || 0
+        );
+    } finally {
+        host.remove();
+    }
+}
+
+/**
+ * Measure known decorations omitted by canvas text measurement. The generic
+ * intrinsic DOM measurement remains the primary path; these extras preserve a
+ * useful fallback when a browser cannot lay out a cloned cell.
  *
  * @param {HTMLElement} element
  * @return {number}
@@ -299,12 +455,21 @@ export function measureContentWidth(elements, minimum, maximum = 520) {
             measureControls(element),
             padding
         );
+        const intrinsicWidth = measureIntrinsicElementWidth(element);
+        const elementWidth = Math.max(
+            contentWidth,
+            intrinsicWidth
+        ) + (
+            intrinsicWidth >= contentWidth ?
+                0 :
+                AUTO_FIT_FALLBACK_PADDING
+        );
 
         return Math.max(
             width,
-            contentWidth
+            elementWidth
         );
     }, minimum);
 
-    return Math.min(maximum, Math.max(minimum, Math.ceil(measured + 8)));
+    return Math.min(maximum, Math.max(minimum, Math.ceil(measured)));
 }
