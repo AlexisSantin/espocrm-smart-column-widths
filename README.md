@@ -3,7 +3,7 @@
 Smart Column Widths adds column resizing, double-click auto-fit, reordering and
 reset controls to EspoCRM list views.
 
-Current version: **0.2.2** · [Download the latest release](https://github.com/AlexisSantin/espocrm-smart-column-widths/releases/latest)
+Current version: **0.2.3** · [Download the latest release](https://github.com/AlexisSantin/espocrm-smart-column-widths/releases/latest)
 
 ## Interaction reference
 
@@ -173,7 +173,7 @@ read, update or delete CRM records through a custom API.
 
 ## Installation
 
-1. Download `smart-column-widths-0.2.2.zip` from the
+1. Download `smart-column-widths-0.2.3.zip` from the
    [latest GitHub release](https://github.com/AlexisSantin/espocrm-smart-column-widths/releases/latest).
 2. In EspoCRM, open **Administration → Extensions**.
 3. Upload the ZIP file without extracting it.
@@ -202,7 +202,7 @@ they are harmless and are ignored when the extension is absent.
 - PHP `>= 8.3`
 - A modern desktop browser
 
-Version 0.2.2 has been developed and tested against EspoCRM 10.0.3.
+Version 0.2.3 has been developed and tested against EspoCRM 10.0.3.
 
 Resize handles are intentionally hidden on small mobile viewports, where
 horizontal touch scrolling has priority.

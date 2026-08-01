@@ -10,6 +10,10 @@ import {
     reorderNamedCells,
 } from
     'smart-column-widths:utils/dom-order';
+import {
+    getDragPreviewPosition,
+    getHeaderLabel,
+} from 'smart-column-widths:utils/drag-preview';
 
 export default class ListTableController {
 
@@ -345,6 +349,7 @@ export default class ListTableController {
 
         const header = source.closest('th[data-name]');
         const name = header?.dataset.name;
+        const headerRect = header?.getBoundingClientRect();
 
         if (!name) {
             return;
@@ -356,9 +361,13 @@ export default class ListTableController {
         this.activeInteraction = {
             type: 'reorder',
             name,
+            source: header,
             startX: event.clientX,
             active: false,
             beforeName: null,
+            dragPreview: null,
+            previewOffsetX: event.clientX - headerRect.left,
+            previewOffsetY: event.clientY - headerRect.top,
         };
         this.bindWindowPointerEvents();
     }
@@ -403,6 +412,7 @@ export default class ListTableController {
 
         this.activeInteraction.active = true;
         document.body.classList.add('scw-is-reordering');
+        this.createDragPreview(this.activeInteraction.source);
 
         const headers = this.getFieldHeaders()
             .filter(header =>
@@ -421,6 +431,7 @@ export default class ListTableController {
                 this.getLastFieldBoundary(),
             'reorder'
         );
+        this.updateDragPreview(event.clientX, event.clientY);
     }
 
     async onPointerUp() {
@@ -553,6 +564,76 @@ export default class ListTableController {
         }
     }
 
+    createDragPreview(header) {
+        if (!this.activeInteraction || this.activeInteraction.dragPreview) {
+            return;
+        }
+
+        const preview = document.createElement('div');
+        const clone = header.cloneNode(true);
+        const content = document.createElement('div');
+        const rect = header.getBoundingClientRect();
+
+        preview.className = 'scw-column-drag-preview';
+        preview.setAttribute('aria-hidden', 'true');
+        preview.setAttribute('inert', '');
+        preview.dataset.name = header.dataset.name || '';
+
+        clone.querySelectorAll('.scw-resizer, .column-resizer')
+            .forEach(element => element.remove());
+        clone.removeAttribute('id');
+        clone.querySelectorAll('[id], [tabindex]')
+            .forEach(element => {
+                element.removeAttribute('id');
+                element.removeAttribute('tabindex');
+            });
+
+        content.className = 'scw-column-drag-preview-content';
+        while (clone.firstChild) {
+            content.append(clone.firstChild);
+        }
+
+        if (content.textContent?.trim() || content.children.length) {
+            preview.append(content);
+        } else {
+            preview.textContent = getHeaderLabel(header);
+        }
+
+        if (rect.width) {
+            preview.style.width = `${Math.round(rect.width)}px`;
+        }
+
+        if (rect.height) {
+            preview.style.height = `${Math.round(rect.height)}px`;
+        }
+
+        document.body.append(preview);
+        this.activeInteraction.dragPreview = preview;
+    }
+
+    updateDragPreview(clientX, clientY) {
+        const preview = this.activeInteraction?.dragPreview;
+
+        if (!preview) {
+            return;
+        }
+
+        const rect = preview.getBoundingClientRect();
+        const position = getDragPreviewPosition(
+            clientX,
+            clientY,
+            rect.width,
+            rect.height,
+            window.innerWidth,
+            window.innerHeight,
+            this.activeInteraction.previewOffsetX,
+            this.activeInteraction.previewOffsetY
+        );
+
+        preview.style.left = `${position.left}px`;
+        preview.style.top = `${position.top}px`;
+    }
+
     getLastFieldBoundary() {
         const headers = this.getFieldHeaders();
         const last = headers[headers.length - 1];
@@ -578,10 +659,12 @@ export default class ListTableController {
             'scw-is-resizing',
             'scw-is-reordering'
         );
+        this.activeInteraction?.dragPreview?.remove();
         this.table?.querySelector('th.being-resized')
             ?.classList.remove('being-resized');
         this.clearResizeHover();
         document.querySelector('.scw-column-guide')?.remove();
+        document.querySelector('.scw-column-drag-preview')?.remove();
         this.activeInteraction = null;
     }
 
