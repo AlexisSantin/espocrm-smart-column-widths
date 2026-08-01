@@ -1,11 +1,40 @@
 # Smart Column Widths for EspoCRM
 
-Smart Column Widths makes EspoCRM list columns easier to resize, reorder and
-restore. It replaces the optional native column-resize mode with a consistent
-desktop interaction while keeping EspoCRM's list layouts, sorting, column
-visibility and access control intact.
+> Turn every EspoCRM list into a faster, cleaner workspace.
 
-Current version: **0.2.2**
+Smart Column Widths gives teams a polished way to resize, auto-fit, reorder and
+restore list columns — without changing administrator layouts or EspoCRM's
+native sorting, visibility and access control.
+
+Make columns fit the data. Keep the important fields in reach. Let every user
+work in the view that suits them.
+
+Current version: **0.2.2** · [Download the latest release](https://github.com/AlexisSantin/espocrm-smart-column-widths/releases/latest)
+
+## Interaction reference
+
+| Action | Result |
+| --- | --- |
+| Hover near a header boundary | Shows the column-resize cursor |
+| Drag a header boundary | Changes only that column's width |
+| Double-click a header boundary | Auto-fits the column to rendered content |
+| Drag empty header space | Moves the header and all corresponding cells |
+| Click a sortable header label | Keeps EspoCRM's native sorting |
+| Change visible columns | Keeps the native column menu open |
+| Reset Order and Widths | Restores administrator order and recalculates widths |
+| Navigate away and return | Restores the personal layout |
+
+## Why teams choose Smart Column Widths
+
+- **Less scrolling, more signal.** Fit columns to real content instead of
+  guessing widths or losing important values behind ellipses.
+- **A personal workspace for every user.** Each user can save their own order
+  and widths for Leads, Contacts, Accounts and custom entities.
+- **Safe for your CRM.** EspoCRM's native sorting, visibility, navigation and
+  access rules remain in charge.
+- **Simple to roll out.** Administrators decide where the experience is
+  enabled, while users adjust their own presentation without affecting the
+  underlying layouts.
 
 ## Features
 
@@ -26,6 +55,8 @@ Current version: **0.2.2**
 
 The native **Column Resize** toggle is hidden while Smart Column Widths is
 active because resizing is always available directly from the headers.
+
+![Resizing the Email column from its header boundary](docs/screenshots/resize-column-boundary.png)
 
 ### Double-click to auto-fit
 
@@ -54,6 +85,8 @@ value cannot create an excessively wide column.
 
 Reordering changes only the current user's presentation. It does not modify
 the administrator's list layout.
+
+![Reordering the Email column](docs/screenshots/reorder-column.png)
 
 ### Persistent personal layout
 
@@ -106,6 +139,8 @@ This action:
 
 It does not reset which fields are active in the administrator's layout.
 
+![Reset order and widths action in the list settings menu](docs/screenshots/reset-order-and-widths.png)
+
 ### Reliable EspoCRM navigation
 
 EspoCRM caches some list views when users move between entities. Smart Column
@@ -134,6 +169,8 @@ The entity selector supports standard and custom object entities. Existing
 installations remain enabled until an administrator explicitly restricts the
 feature.
 
+![Smart Column Widths administration settings](docs/screenshots/administration-settings.png)
+
 ## Permissions and ACL
 
 The extension does not grant access to records, entities or fields.
@@ -151,36 +188,6 @@ The administration page uses EspoCRM's native Settings model:
 
 Smart Column Widths changes only table presentation. It does not create,
 read, update or delete CRM records through a custom API.
-
-## Screenshots
-
-### Resize a column
-
-Move the pointer near a header boundary to reveal the resize handle and adjust
-that column's width.
-
-![Resizing the Email column from its header boundary](docs/screenshots/resize-column-boundary.png)
-
-### Reorder a column
-
-Drag an unused area of a header to move the complete column, including its list
-cells.
-
-![Reordering the Email column](docs/screenshots/reorder-column.png)
-
-### Reset order and widths
-
-Use the list settings menu to restore the administrator's current order and
-recalculate the saved widths for the current user.
-
-![Reset order and widths action in the list settings menu](docs/screenshots/reset-order-and-widths.png)
-
-### Administration settings
-
-Configure the global feature switch and the entities for which enhanced column
-management is enabled.
-
-![Smart Column Widths administration settings](docs/screenshots/administration-settings.png)
 
 ## Installation
 
@@ -217,19 +224,6 @@ Version 0.2.2 has been developed and tested against EspoCRM 10.0.3.
 
 Resize handles are intentionally hidden on small mobile viewports, where
 horizontal touch scrolling has priority.
-
-## Interaction reference
-
-| Action | Result |
-| --- | --- |
-| Hover near a header boundary | Shows the column-resize cursor |
-| Drag a header boundary | Changes only that column's width |
-| Double-click a header boundary | Auto-fits the column to rendered content |
-| Drag empty header space | Moves the header and all corresponding cells |
-| Click a sortable header label | Keeps EspoCRM's native sorting |
-| Change visible columns | Keeps the native column menu open |
-| Reset Order and Widths | Restores administrator order and recalculates widths |
-| Navigate away and return | Restores the personal layout |
 
 ## Troubleshooting
 
