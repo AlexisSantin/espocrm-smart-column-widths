@@ -68,7 +68,7 @@ value cannot create an excessively wide column.
 Reordering changes only the current user's presentation. It does not modify
 the administrator's list layout.
 
-![Reordering the Email column](docs/screenshots/reorder-column.png)
+![Dragging the Assigned User header to reorder a column](docs/screenshots/reorder-column.png)
 
 ### Persistent personal layout
 
