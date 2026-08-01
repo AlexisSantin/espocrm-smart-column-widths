@@ -5,7 +5,7 @@ restore. It replaces the optional native column-resize mode with a consistent
 desktop interaction while keeping EspoCRM's list layouts, sorting, column
 visibility and access control intact.
 
-Current version: **0.2.0**
+Current version: **0.2.2**
 
 ## Features
 
@@ -154,18 +154,37 @@ read, update or delete CRM records through a custom API.
 
 ## Screenshots
 
-<!--
-Suggested screenshots to add before the public release:
+### Resize a column
 
-1. Resizing a column from its header boundary.
-2. Reordering a complete column.
-3. The list settings menu with "Reset Order and Widths".
-4. Administration > Customization > Smart Column Widths.
--->
+Move the pointer near a header boundary to reveal the resize handle and adjust
+that column's width.
+
+![Resizing the Email column from its header boundary](docs/screenshots/resize-column-boundary.png)
+
+### Reorder a column
+
+Drag an unused area of a header to move the complete column, including its list
+cells.
+
+![Reordering the Email column](docs/screenshots/reorder-column.png)
+
+### Reset order and widths
+
+Use the list settings menu to restore the administrator's current order and
+recalculate the saved widths for the current user.
+
+![Reset order and widths action in the list settings menu](docs/screenshots/reset-order-and-widths.png)
+
+### Administration settings
+
+Configure the global feature switch and the entities for which enhanced column
+management is enabled.
+
+![Smart Column Widths administration settings](docs/screenshots/administration-settings.png)
 
 ## Installation
 
-1. Download `smart-column-widths-0.2.0.zip` from the
+1. Download `smart-column-widths-0.2.2.zip` from the
    [latest GitHub release](https://github.com/AlexisSantin/espocrm-smart-column-widths/releases/latest).
 2. In EspoCRM, open **Administration → Extensions**.
 3. Upload the ZIP file without extracting it.
@@ -194,7 +213,7 @@ they are harmless and are ignored when the extension is absent.
 - PHP `>= 8.3`
 - A modern desktop browser
 
-Version 0.2.0 has been developed and tested against EspoCRM 10.0.3.
+Version 0.2.2 has been developed and tested against EspoCRM 10.0.3.
 
 Resize handles are intentionally hidden on small mobile viewports, where
 horizontal touch scrolling has priority.

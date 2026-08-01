@@ -13,6 +13,7 @@ import {
     fitColumnWidths,
     findHeaderAtResizeBoundary,
     getFieldMinimumWidth,
+    measureContentWidth,
 } from '../files/client/custom/modules/smart-column-widths/src/utils/field-sizing.js';
 import isSmartColumnWidthsEnabledForEntity from
     '../files/client/custom/modules/smart-column-widths/src/utils/configuration.js';
@@ -138,6 +139,111 @@ test('auto-fit can include targeted enum decoration widths', () => {
         combineContentWidths(50, 10, 0, 16),
         76
     );
+});
+
+test('auto-fit uses the intrinsic rendered width of non-text decorations', () => {
+    const originalDocument = globalThis.document;
+    const originalWindow = globalThis.window;
+    const originalInput = globalThis.HTMLInputElement;
+
+    class FakeStyle {
+
+        setProperty() {}
+
+    }
+
+    class FakeElement {
+
+        constructor({intrinsicWidth = 0, text = ''} = {}) {
+            this.intrinsicWidth = intrinsicWidth;
+            this.innerText = text;
+            this.textContent = text;
+            this.scrollWidth = intrinsicWidth;
+            this.style = new FakeStyle();
+            this.className = '';
+        }
+
+        append() {}
+
+        cloneNode() {
+            return new FakeElement({
+                intrinsicWidth: this.intrinsicWidth,
+                text: this.textContent,
+            });
+        }
+
+        closest() {
+            return null;
+        }
+
+        getBoundingClientRect() {
+            return {width: this.intrinsicWidth};
+        }
+
+        querySelectorAll() {
+            return [];
+        }
+
+        remove() {}
+
+        setAttribute() {}
+
+    }
+
+    const fakeBody = new FakeElement();
+
+    globalThis.document = {
+        body: fakeBody,
+        createElement: name => name === 'canvas' ?
+            {
+                getContext: () => ({
+                    measureText: () => ({width: 42}),
+                }),
+            } :
+            new FakeElement(),
+    };
+    globalThis.window = {
+        getComputedStyle: () => ({
+            borderLeftWidth: '0',
+            borderRightWidth: '0',
+            font: '16px sans-serif',
+            marginLeft: '0',
+            marginRight: '0',
+            paddingLeft: '0',
+            paddingRight: '0',
+        }),
+    };
+    globalThis.HTMLInputElement = class {};
+
+    try {
+        const assignedUserCell = new FakeElement({
+            intrinsicWidth: 124,
+            text: 'Admin',
+        });
+
+        assert.equal(
+            measureContentWidth([assignedUserCell], 56),
+            124
+        );
+    } finally {
+        if (originalDocument === undefined) {
+            delete globalThis.document;
+        } else {
+            globalThis.document = originalDocument;
+        }
+
+        if (originalWindow === undefined) {
+            delete globalThis.window;
+        } else {
+            globalThis.window = originalWindow;
+        }
+
+        if (originalInput === undefined) {
+            delete globalThis.HTMLInputElement;
+        } else {
+            globalThis.HTMLInputElement = originalInput;
+        }
+    }
 });
 
 test('reset widths fit the viewport without horizontal overflow', () => {
