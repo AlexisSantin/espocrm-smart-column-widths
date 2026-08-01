@@ -1,0 +1,59 @@
+name: Build and publish release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the tagged source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Verify the tag matches package.json
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          version="${TAG_NAME#v}"
+          package_version="$(node -p "require('./package.json').version")"
+          test "$version" = "$package_version"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build the extension
+        run: npm run extension
+
+      - name: Verify the release package
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          version="${TAG_NAME#v}"
+          test -f "build/smart-column-widths-${version}.zip"
+
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          version="${TAG_NAME#v}"
+          gh release create "$TAG_NAME" \
+            "build/smart-column-widths-${version}.zip" \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Smart Column Widths ${version}" \
+            --generate-notes
