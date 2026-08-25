@@ -139,19 +139,36 @@ After installation, open:
 
 **Administration → Customization → Smart Column Widths**
 
-The page provides three settings:
+The page provides four settings:
 
 - **Enable enhanced column management** — global on/off switch.
+- **Enable in Administration** — enables Smart Column Widths in Administration
+  lists independently from regular record lists. It remains subject to entity
+  compatibility and ACL.
 - **Enable for all entities** — enables the extension for every compatible
   entity.
 - **Enabled entities** — when the previous option is disabled, selects the
   entities on which Smart Column Widths is available.
 
-The entity selector supports standard and custom object entities. Existing
-installations remain enabled until an administrator explicitly restricts the
-feature.
+The entity selector supports standard and custom object entities.
 
 ![Smart Column Widths administration settings](docs/screenshots/administration-settings.png)
+
+After a first installation, Smart Column Widths is enabled for all compatible
+record-list entities, while Administration lists remain disabled until
+**Enable in Administration** is turned on.
+
+Existing installations keep their current global and entity-scope settings. The
+Administration setting defaults to disabled when it is first added.
+
+The settings are stored under these EspoCRM configuration keys:
+
+| Setting | Key | Default |
+| --- | --- | --- |
+| Enable enhanced column management | `smartColumnWidthsEnabled` | `true` |
+| Enable in Administration | `smartColumnWidthsAdminEnabled` | `false` |
+| Enable for all entities | `smartColumnWidthsAllEntities` | `true` |
+| Enabled entities | `smartColumnWidthsEntityList` | `[]` |
 
 ## Permissions and ACL
 
@@ -179,7 +196,7 @@ read, update or delete CRM records through a custom API.
 3. Upload the ZIP file without extracting it.
 4. Install the extension.
 5. Reload EspoCRM in the browser.
-6. Configure the enabled entities under
+6. Configure activation and entity scope under
    **Administration → Customization → Smart Column Widths**.
 
 ### Upgrade
@@ -214,6 +231,8 @@ horizontal touch scrolling has priority.
 Check that:
 
 - Smart Column Widths is enabled globally;
+- **Enable in Administration** is turned on when using an Administration
+  list;
 - the current entity is enabled in the extension settings;
 - the browser viewport is wider than the mobile breakpoint;
 - the extension is installed and enabled under
