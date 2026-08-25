@@ -14,6 +14,10 @@ const settingsMetadataPath = new URL(
     '../files/custom/Espo/Modules/SmartColumnWidths/Resources/metadata/entityDefs/Settings.json',
     import.meta.url
 );
+const settingsLayoutPath = new URL(
+    '../files/custom/Espo/Modules/SmartColumnWidths/Resources/layouts/Settings/smartColumnWidths.json',
+    import.meta.url
+);
 
 test('the bundled frontend initializer is loaded by EspoCRM', async () => {
     const metadata = JSON.parse(
@@ -39,7 +43,7 @@ test('administration entry opens the Smart Column Widths settings view', async (
     );
 });
 
-test('settings expose global and per-entity activation fields', async () => {
+test('settings expose global, administration, and per-entity activation fields', async () => {
     const metadata = JSON.parse(
         await readFile(settingsMetadataPath, 'utf8')
     );
@@ -48,12 +52,31 @@ test('settings expose global and per-entity activation fields', async () => {
         Object.keys(metadata.fields),
         [
             'smartColumnWidthsEnabled',
+            'smartColumnWidthsAdminEnabled',
             'smartColumnWidthsAllEntities',
             'smartColumnWidthsEntityList',
         ]
     );
     assert.equal(
+        metadata.fields.smartColumnWidthsAdminEnabled.default,
+        false
+    );
+    assert.equal(
         metadata.fields.smartColumnWidthsEntityList.type,
         'multiEnum'
+    );
+
+    const layout = JSON.parse(
+        await readFile(settingsLayoutPath, 'utf8')
+    );
+
+    assert.deepEqual(
+        layout[0].rows.map(row => row[0].name),
+        [
+            'smartColumnWidthsEnabled',
+            'smartColumnWidthsAdminEnabled',
+            'smartColumnWidthsAllEntities',
+            'smartColumnWidthsEntityList',
+        ]
     );
 });

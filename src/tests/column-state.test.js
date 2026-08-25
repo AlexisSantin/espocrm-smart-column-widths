@@ -33,13 +33,28 @@ test('eligible columns follow the active administrator layout', () => {
     );
 });
 
-test('entity configuration defaults to enabled and applies restrictions', () => {
+test('entity and administration configuration applies restrictions', () => {
     const createConfig = values => ({
         get: name => values[name],
     });
 
     assert.equal(
         isSmartColumnWidthsEnabledForEntity(createConfig({}), 'Lead'),
+        true
+    );
+    assert.equal(
+        isSmartColumnWidthsEnabledForEntity(
+            createConfig({smartColumnWidthsAdminEnabled: false}),
+            'Lead',
+            true
+        ),
+        false
+    );
+    assert.equal(
+        isSmartColumnWidthsEnabledForEntity(
+            createConfig({smartColumnWidthsAdminEnabled: false}),
+            'Lead'
+        ),
         true
     );
     assert.equal(

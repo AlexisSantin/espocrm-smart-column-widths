@@ -10,6 +10,12 @@
             ],
             [
                 {
+                    "name": "smartColumnWidthsAdminEnabled"
+                },
+                false
+            ],
+            [
+                {
                     "name": "smartColumnWidthsAllEntities"
                 },
                 false

@@ -4,11 +4,13 @@
     },
     "fields": {
         "smartColumnWidthsEnabled": "Enable enhanced column management",
+        "smartColumnWidthsAdminEnabled": "Enable in Administration",
         "smartColumnWidthsAllEntities": "Enable for all entities",
         "smartColumnWidthsEntityList": "Enabled entities"
     },
     "tooltips": {
         "smartColumnWidthsEnabled": "Globally enables or disables Smart Column Widths.",
+        "smartColumnWidthsAdminEnabled": "Enables or disables Smart Column Widths in all Administration lists.",
         "smartColumnWidthsAllEntities": "Makes enhanced column resizing and reordering available for every compatible entity.",
         "smartColumnWidthsEntityList": "Entities where enhanced column management is available when the all-entities option is disabled."
     }

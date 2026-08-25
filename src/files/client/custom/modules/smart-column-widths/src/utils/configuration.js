@@ -4,13 +4,22 @@
  *
  * @param {import('models/settings').default} config
  * @param {string} entityType
+ * @param {boolean} [isAdministration=false]
  * @return {boolean}
  */
 export default function isSmartColumnWidthsEnabledForEntity(
     config,
-    entityType
+    entityType,
+    isAdministration = false
 ) {
     if (config.get('smartColumnWidthsEnabled') === false) {
+        return false;
+    }
+
+    if (
+        isAdministration &&
+        config.get('smartColumnWidthsAdminEnabled') === false
+    ) {
         return false;
     }
 

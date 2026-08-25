@@ -4,11 +4,13 @@
     },
     "fields": {
         "smartColumnWidthsEnabled": "Activer la gestion avancée des colonnes",
+        "smartColumnWidthsAdminEnabled": "Activer dans l’administration",
         "smartColumnWidthsAllEntities": "Activer pour toutes les entités",
         "smartColumnWidthsEntityList": "Entités activées"
     },
     "tooltips": {
         "smartColumnWidthsEnabled": "Active ou désactive globalement Smart Column Widths.",
+        "smartColumnWidthsAdminEnabled": "Active ou désactive Smart Column Widths dans toutes les listes de l’administration.",
         "smartColumnWidthsAllEntities": "Rend le redimensionnement et le déplacement avancés disponibles pour toutes les entités compatibles.",
         "smartColumnWidthsEntityList": "Entités pour lesquelles la gestion avancée des colonnes est disponible lorsque l’option toutes les entités est désactivée."
     }

@@ -5,6 +5,11 @@
             "default": true,
             "tooltip": true
         },
+        "smartColumnWidthsAdminEnabled": {
+            "type": "bool",
+            "default": false,
+            "tooltip": true
+        },
         "smartColumnWidthsAllEntities": {
             "type": "bool",
             "default": true,

@@ -4,22 +4,37 @@ use Espo\Core\Container;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
-use Espo\ORM\EntityManager;
 
 /**
  * Called when the extension is installed. Here you can write config parameter or create default records.
  */
 class AfterInstall
 {
-    public function run(Container $container)
+    public function run(Container $container): void
     {
-        // Use to create or read records.
-        $em = $container->getByClass(EntityManager::class);
-
-        // Use to add parameter values to the config.
-        $configWriter = $container->getByClass(InjectableFactory::class)->create(ConfigWriter::class);
-
+        $factory = $container->getByClass(InjectableFactory::class);
+        $configWriter = $factory->create(ConfigWriter::class);
         $config = $container->getByClass(Config::class);
+        $defaultMap = [
+            'smartColumnWidthsEnabled' => true,
+            'smartColumnWidthsAdminEnabled' => false,
+            'smartColumnWidthsAllEntities' => true,
+            'smartColumnWidthsEntityList' => [],
+        ];
+        $hasChanges = false;
+
+        foreach ($defaultMap as $name => $value) {
+            if ($config->get($name) !== null) {
+                continue;
+            }
+
+            $configWriter->set($name, $value);
+            $hasChanges = true;
+        }
+
+        if ($hasChanges) {
+            $configWriter->save();
+        }
     }
 }
 

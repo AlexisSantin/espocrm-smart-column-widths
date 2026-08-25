@@ -63,10 +63,14 @@ export default class ListColumnManager {
             return;
         }
 
+        const currentUrl = this.view.getRouter()?.getCurrentUrl?.() || '';
+        const isAdministration = currentUrl.startsWith('#Admin/');
+
         if (
             !isSmartColumnWidthsEnabledForEntity(
                 this.view.getConfig(),
-                this.entityType
+                this.entityType,
+                isAdministration
             )
         ) {
             return;

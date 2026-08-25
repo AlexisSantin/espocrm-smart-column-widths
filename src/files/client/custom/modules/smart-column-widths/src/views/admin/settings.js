@@ -7,6 +7,16 @@ export default class SmartColumnWidthsSettingsView
 
     dynamicLogicDefs = {
         fields: {
+            smartColumnWidthsAdminEnabled: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            attribute: 'smartColumnWidthsEnabled',
+                            type: 'isTrue',
+                        },
+                    ],
+                },
+            },
             smartColumnWidthsAllEntities: {
                 visible: {
                     conditionGroup: [
@@ -37,6 +47,10 @@ export default class SmartColumnWidthsSettingsView
     setup() {
         if (this.model.get('smartColumnWidthsEnabled') == null) {
             this.model.set('smartColumnWidthsEnabled', true);
+        }
+
+        if (this.model.get('smartColumnWidthsAdminEnabled') == null) {
+            this.model.set('smartColumnWidthsAdminEnabled', false);
         }
 
         if (this.model.get('smartColumnWidthsAllEntities') == null) {
