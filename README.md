@@ -219,7 +219,7 @@ they are harmless and are ignored when the extension is absent.
 - PHP `>= 8.3`
 - A modern desktop browser
 
-Version 0.2.3 has been developed and tested against EspoCRM 10.0.3.
+Version 0.2.4 has been developed and tested against EspoCRM 10.0.3.
 
 Resize handles are intentionally hidden on small mobile viewports, where
 horizontal touch scrolling has priority.
