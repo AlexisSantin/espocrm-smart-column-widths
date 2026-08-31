@@ -1,9 +1,10 @@
-# Smart Column Widths for EspoCRM
+# Better Columns for EspoCRM
 
-Smart Column Widths adds column resizing, double-click auto-fit, reordering and
-reset controls to EspoCRM list views.
+Better Columns improves EspoCRM list views with column resizing, double-click
+auto-fit, column reordering, persistent personal layouts, and reset controls
+for column order and widths.
 
-Current version: **0.2.4** · [Download the latest release](https://github.com/AlexisSantin/espocrm-smart-column-widths/releases/latest)
+Current version: **1.0.0** · [Download the latest release](https://github.com/AlexisSantin/espocrm-better-columns/releases/latest)
 
 ## Interaction reference
 
@@ -35,7 +36,7 @@ Current version: **0.2.4** · [Download the latest release](https://github.com/A
 - When the total width exceeds the list container, EspoCRM's horizontal
   scrolling remains available.
 
-The native **Column Resize** toggle is hidden while Smart Column Widths is
+The native **Column Resize** toggle is hidden while Better Columns is
 active because resizing is always available directly from the headers.
 
 ![Resizing the Email column from its header boundary](docs/screenshots/resize-column-boundary.png)
@@ -88,7 +89,7 @@ personal column preferences.
 
 ### Safe layout reconciliation
 
-Smart Column Widths always starts from the current list layout configured by
+Better Columns always starts from the current list layout configured by
 an administrator.
 
 When that layout changes:
@@ -107,7 +108,7 @@ EspoCRM's native list settings menu remains responsible for showing and
 hiding columns. The menu stays open while column choices are changed, making
 it possible to configure several columns without reopening it each time.
 
-Smart Column Widths adds:
+Better Columns adds:
 
 **Reset Order and Widths**
 
@@ -125,8 +126,8 @@ It does not reset which fields are active in the administrator's layout.
 
 ### Reliable EspoCRM navigation
 
-EspoCRM caches some list views when users move between entities. Smart Column
-Widths handles that lifecycle explicitly, so resizing and reordering remain
+EspoCRM caches some list views when users move between entities. Better Columns
+handles that lifecycle explicitly, so resizing and reordering remain
 active after navigating away from a list and returning to it.
 
 The extension also observes list re-rendering after pagination, sorting,
@@ -137,45 +138,44 @@ replacing the whole EspoCRM list view.
 
 After installation, open:
 
-**Administration → Customization → Smart Column Widths**
+**Administration → Customization → Better Columns**
 
 The page provides four settings:
 
 - **Enable enhanced column management** — global on/off switch.
-- **Enable in Administration** — enables Smart Column Widths in Administration
+- **Enable in Administration** — enables Better Columns in Administration
   lists independently from regular record lists. It remains subject to entity
   compatibility and ACL.
 - **Enable for all entities** — enables the extension for every compatible
   entity.
 - **Enabled entities** — when the previous option is disabled, selects the
-  entities on which Smart Column Widths is available.
+  entities on which Better Columns is available.
 
 The entity selector supports standard and custom object entities.
 
-![Smart Column Widths administration settings](docs/screenshots/administration-settings.png)
+![Better Columns administration settings](docs/screenshots/administration-settings.png)
 
-After a first installation, Smart Column Widths is enabled for all compatible
+After installation, Better Columns is enabled for all compatible
 record-list entities, while Administration lists remain disabled until
 **Enable in Administration** is turned on.
 
-Existing installations keep their current global and entity-scope settings. The
-Administration setting defaults to disabled when it is first added.
+The Administration setting defaults to disabled.
 
 The settings are stored under these EspoCRM configuration keys:
 
 | Setting | Key | Default |
 | --- | --- | --- |
-| Enable enhanced column management | `smartColumnWidthsEnabled` | `true` |
-| Enable in Administration | `smartColumnWidthsAdminEnabled` | `false` |
-| Enable for all entities | `smartColumnWidthsAllEntities` | `true` |
-| Enabled entities | `smartColumnWidthsEntityList` | `[]` |
+| Enable enhanced column management | `betterColumnsEnabled` | `true` |
+| Enable in Administration | `betterColumnsAdminEnabled` | `false` |
+| Enable for all entities | `betterColumnsAllEntities` | `true` |
+| Enabled entities | `betterColumnsEntityList` | `[]` |
 
 ## Permissions and ACL
 
 The extension does not grant access to records, entities or fields.
 
 EspoCRM filters the list layout using the current user's entity and
-field-level read permissions before Smart Column Widths receives it. Stored
+field-level read permissions before Better Columns receives it. Stored
 orders and widths are then reconciled only against those authorized columns.
 
 The administration page uses EspoCRM's native Settings model:
@@ -185,25 +185,25 @@ The administration page uses EspoCRM's native Settings model:
 - the enabled-entity list is filtered according to the current user's scope
   access.
 
-Smart Column Widths changes only table presentation. It does not create,
+Better Columns changes only table presentation. It does not create,
 read, update or delete CRM records through a custom API.
 
 ## Installation
 
-1. Download `smart-column-widths-0.2.4.zip` from the
-   [latest GitHub release](https://github.com/AlexisSantin/espocrm-smart-column-widths/releases/latest).
+1. Download `better-columns-1.0.0.zip` from the
+  [latest GitHub release](https://github.com/AlexisSantin/espocrm-better-columns/releases/latest).
 2. In EspoCRM, open **Administration → Extensions**.
 3. Upload the ZIP file without extracting it.
 4. Install the extension.
 5. Reload EspoCRM in the browser.
 6. Configure activation and entity scope under
-   **Administration → Customization → Smart Column Widths**.
+  **Administration → Customization → Better Columns**.
 
 ### Upgrade
 
-Download the newer ZIP and install it from **Administration → Extensions**.
-Personal browser widths and orders, as well as administration settings, are
-preserved.
+Download a newer Better Columns ZIP and install it from
+**Administration → Extensions**. Personal browser widths and orders, as well
+as administration settings, are preserved between Better Columns releases.
 
 ### Uninstall
 
@@ -219,7 +219,7 @@ they are harmless and are ignored when the extension is absent.
 - PHP `>= 8.3`
 - A modern desktop browser
 
-Version 0.2.4 has been developed and tested against EspoCRM 10.0.3.
+Version 1.0.0 has been developed and tested against EspoCRM 10.0.3.
 
 Resize handles are intentionally hidden on small mobile viewports, where
 horizontal touch scrolling has priority.
@@ -230,7 +230,7 @@ horizontal touch scrolling has priority.
 
 Check that:
 
-- Smart Column Widths is enabled globally;
+- Better Columns is enabled globally;
 - **Enable in Administration** is turned on when using an Administration
   list;
 - the current entity is enabled in the extension settings;
@@ -248,7 +248,7 @@ feedback and are not server-side user preferences.
 
 ### An administrator changed the list layout
 
-Reload the list. Smart Column Widths automatically reconciles personal
+Reload the list. Better Columns automatically reconciles personal
 preferences with the latest active fields and discards obsolete entries.
 
 ### Restore the default presentation
@@ -320,7 +320,7 @@ npm run extension
 The generated package is written to:
 
 ```text
-build/smart-column-widths-<version>.zip
+build/better-columns-<version>.zip
 ```
 
 ## Contributing
@@ -341,7 +341,7 @@ When contributing:
 
 Use GitHub Issues for reproducible bugs and feature requests. Include:
 
-- the Smart Column Widths version;
+- the Better Columns version;
 - the EspoCRM version;
 - the browser and operating system;
 - the affected entity and field types;
@@ -356,7 +356,7 @@ from screenshots and logs.
 
 ## License
 
-Smart Column Widths is free software licensed under the
+Better Columns is free software licensed under the
 [GNU General Public License v3.0 or later](LICENSE).
 
 ## Author

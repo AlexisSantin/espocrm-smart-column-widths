@@ -5,9 +5,9 @@ import {
     canStartHeaderReorder,
     reorderNamedCells,
 } from
-    '../files/client/custom/modules/smart-column-widths/src/utils/dom-order.js';
+    '../files/client/custom/modules/better-columns/src/utils/dom-order.js';
 import {calculateTableSizing} from
-    '../files/client/custom/modules/smart-column-widths/src/utils/field-sizing.js';
+    '../files/client/custom/modules/better-columns/src/utils/field-sizing.js';
 
 class FakeCell {
 

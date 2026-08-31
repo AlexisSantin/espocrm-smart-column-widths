@@ -16,10 +16,10 @@ class AfterInstall
         $configWriter = $factory->create(ConfigWriter::class);
         $config = $container->getByClass(Config::class);
         $defaultMap = [
-            'smartColumnWidthsEnabled' => true,
-            'smartColumnWidthsAdminEnabled' => false,
-            'smartColumnWidthsAllEntities' => true,
-            'smartColumnWidthsEntityList' => [],
+            'betterColumnsEnabled' => true,
+            'betterColumnsAdminEnabled' => false,
+            'betterColumnsAllEntities' => true,
+            'betterColumnsEntityList' => [],
         ];
         $hasChanges = false;
 

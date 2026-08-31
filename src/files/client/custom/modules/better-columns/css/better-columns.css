@@ -1,0 +1,160 @@
+.better-columns-list {
+    overflow-x: auto;
+    overflow-y: visible;
+    scrollbar-color:
+        color-mix(in srgb, var(--scroll-thumb-bg) 15%, transparent)
+        transparent;
+}
+
+.better-columns-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.better-columns-list::-webkit-scrollbar-thumb {
+    background-color: color-mix(
+        in srgb,
+        var(--scroll-thumb-bg) 15%,
+        transparent
+    );
+}
+
+.better-columns-managed-table {
+    table-layout: fixed;
+}
+
+.better-columns-managed-table > thead > tr > th.field-header-cell[data-name] {
+    cursor: grab;
+    position: relative;
+}
+
+.better-columns-managed-table > thead > tr > th > .better-columns-resizer {
+    display: block;
+    height: 100%;
+    right: -6px;
+    top: 0;
+    width: 18px;
+    z-index: 4;
+}
+
+.better-columns-managed-table > thead > tr > th > .better-columns-resizer::after {
+    border-right: 1px solid transparent;
+    height: 18px;
+    right: 0;
+    top: 10px;
+    transition: border-color 100ms ease;
+}
+
+[dir="rtl"] .better-columns-managed-table > thead > tr > th > .better-columns-resizer {
+    left: -6px;
+    right: auto;
+}
+
+[dir="rtl"] .better-columns-managed-table > thead > tr > th > .better-columns-resizer::after {
+    border-left: 1px solid transparent;
+    border-right: 0;
+    left: 0;
+    right: auto;
+}
+
+.better-columns-managed-table > thead > tr > th:hover > .better-columns-resizer::after,
+.better-columns-managed-table > thead > tr > th > .better-columns-resizer:hover::after,
+.better-columns-managed-table > thead > tr > th.better-columns-resize-hot > .better-columns-resizer::after {
+    border-right-color: var(--gray-light);
+}
+
+[dir="rtl"] .better-columns-managed-table > thead > tr > th:hover > .better-columns-resizer::after,
+[dir="rtl"] .better-columns-managed-table > thead > tr > th > .better-columns-resizer:hover::after,
+[dir="rtl"] .better-columns-managed-table > thead > tr > th.better-columns-resize-hot > .better-columns-resizer::after {
+    border-left-color: var(--gray-light);
+}
+
+.better-columns-managed-table.better-columns-resize-hot,
+.better-columns-managed-table.better-columns-resize-hot * {
+    cursor: col-resize !important;
+}
+
+.better-columns-managed-table .better-columns-filler-cell {
+    border-left: 0;
+    border-right: 0;
+    padding: 0;
+}
+
+.better-columns-column-guide {
+    background: var(--brand-primary);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--brand-primary) 30%, transparent);
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    width: 2px;
+    z-index: 1100;
+}
+
+.better-columns-column-guide[data-type="reorder"] {
+    width: 3px;
+}
+
+.better-columns-column-drag-preview {
+    align-items: center;
+    background: var(--panel-bg, var(--body-bg, #fff));
+    border: 1px solid var(--gray-light);
+    border-radius: 3px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 18%);
+    color: var(--text-color, #333);
+    display: flex;
+    font-size: 1em;
+    font-weight: 600;
+    gap: 6px;
+    line-height: 1.35;
+    max-width: min(320px, calc(100vw - 16px));
+    overflow: hidden;
+    padding: 6px 10px;
+    pointer-events: none;
+    position: fixed;
+    text-overflow: ellipsis;
+    opacity: 0.72;
+    user-select: none;
+    white-space: nowrap;
+    will-change: left, top;
+    z-index: 1101;
+}
+
+.better-columns-column-drag-preview-content {
+    align-items: center;
+    display: flex;
+    gap: 6px;
+    min-width: 0;
+    overflow: hidden;
+    width: 100%;
+}
+
+.better-columns-column-drag-preview-content > * {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.better-columns-column-drag-preview-content a,
+.better-columns-column-drag-preview-content button {
+    color: inherit;
+    pointer-events: none;
+}
+
+body.better-columns-is-resizing,
+body.better-columns-is-resizing * {
+    cursor: col-resize !important;
+    user-select: none !important;
+}
+
+body.better-columns-is-reordering,
+body.better-columns-is-reordering * {
+    cursor: grabbing !important;
+    user-select: none !important;
+}
+
+@media (max-width: 767px) {
+    .better-columns-managed-table .better-columns-resizer {
+        display: none !important;
+    }
+}

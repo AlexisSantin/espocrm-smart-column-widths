@@ -1,0 +1,31 @@
+[
+    {
+        "label": "Column Management",
+        "rows": [
+            [
+                {
+                    "name": "betterColumnsEnabled"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "betterColumnsAdminEnabled"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "betterColumnsAllEntities"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "betterColumnsEntityList"
+                },
+                false
+            ]
+        ]
+    }
+]

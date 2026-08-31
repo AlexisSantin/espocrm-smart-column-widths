@@ -7,7 +7,7 @@
         "host": "localhost",
         "port": null,
         "charset": "utf8mb4",
-        "dbname": "ext-smart-column-widths",
+        "dbname": "ext-better-columns",
         "user": "root",
         "password": "",
         "platform": "Mysql"
@@ -16,7 +16,7 @@
         "language": "en_US",
         "defaultOwner": "www-data",
         "defaultGroup": "www-data",
-        "siteUrl": "http://localhost/ext-smart-column-widths/site",
+        "siteUrl": "http://localhost/ext-better-columns/site",
         "adminUsername": "admin",
         "adminPassword": "1"
     }

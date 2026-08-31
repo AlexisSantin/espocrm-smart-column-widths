@@ -4,7 +4,7 @@ import test from 'node:test';
 import {
     getDragPreviewPosition,
     getHeaderLabel,
-} from '../files/client/custom/modules/smart-column-widths/src/utils/drag-preview.js';
+} from '../files/client/custom/modules/better-columns/src/utils/drag-preview.js';
 
 test('drag preview prefers the rendered header label with safe fallbacks', () => {
     assert.equal(

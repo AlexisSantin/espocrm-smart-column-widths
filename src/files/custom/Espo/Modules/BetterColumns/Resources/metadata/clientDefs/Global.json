@@ -1,0 +1,9 @@
+{
+    "viewSetupHandlers": {
+        "record/list": [
+            "__APPEND__",
+            "better-columns:handlers/record/list-columns"
+        ]
+    }
+}
+

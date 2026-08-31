@@ -1,0 +1,17 @@
+{
+    "labels": {
+        "Column Management": "Column Management"
+    },
+    "fields": {
+        "betterColumnsEnabled": "Enable enhanced column management",
+        "betterColumnsAdminEnabled": "Enable in Administration",
+        "betterColumnsAllEntities": "Enable for all entities",
+        "betterColumnsEntityList": "Enabled entities"
+    },
+    "tooltips": {
+        "betterColumnsEnabled": "Globally enables or disables Better Columns.",
+        "betterColumnsAdminEnabled": "Enables or disables Better Columns in all Administration lists.",
+        "betterColumnsAllEntities": "Makes enhanced column resizing and reordering available for every compatible entity.",
+        "betterColumnsEntityList": "Entities where enhanced column management is available when the all-entities option is disabled."
+    }
+}

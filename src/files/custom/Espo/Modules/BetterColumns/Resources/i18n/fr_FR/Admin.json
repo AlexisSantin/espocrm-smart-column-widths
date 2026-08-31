@@ -1,0 +1,11 @@
+{
+    "labels": {
+        "Better Columns": "Better Columns"
+    },
+    "descriptions": {
+        "betterColumns": "Choisir les entités pour lesquelles la gestion avancée des colonnes est disponible."
+    },
+    "keywords": {
+        "betterColumns": "colonne,largeur,redimensionnement,déplacement,entité,configuration"
+    }
+}

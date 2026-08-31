@@ -6,7 +6,7 @@ import {
     getEligibleLayoutItems,
     reconcileOrder,
     reconcileState,
-} from '../files/client/custom/modules/smart-column-widths/src/utils/column-state.js';
+} from '../files/client/custom/modules/better-columns/src/utils/column-state.js';
 import {
     combineContentWidths,
     constrainWidth,
@@ -14,9 +14,9 @@ import {
     findHeaderAtResizeBoundary,
     getFieldMinimumWidth,
     measureContentWidth,
-} from '../files/client/custom/modules/smart-column-widths/src/utils/field-sizing.js';
-import isSmartColumnWidthsEnabledForEntity from
-    '../files/client/custom/modules/smart-column-widths/src/utils/configuration.js';
+} from '../files/client/custom/modules/better-columns/src/utils/field-sizing.js';
+import isBetterColumnsEnabledForEntity from
+    '../files/client/custom/modules/better-columns/src/utils/configuration.js';
 
 test('eligible columns follow the active administrator layout', () => {
     const items = getEligibleLayoutItems([
@@ -39,41 +39,53 @@ test('entity and administration configuration applies restrictions', () => {
     });
 
     assert.equal(
-        isSmartColumnWidthsEnabledForEntity(createConfig({}), 'Lead'),
+        isBetterColumnsEnabledForEntity(createConfig({}), 'Lead'),
         true
     );
     assert.equal(
-        isSmartColumnWidthsEnabledForEntity(
-            createConfig({smartColumnWidthsAdminEnabled: false}),
+        isBetterColumnsEnabledForEntity(
+            createConfig({betterColumnsAdminEnabled: false}),
             'Lead',
             true
         ),
         false
     );
     assert.equal(
-        isSmartColumnWidthsEnabledForEntity(
-            createConfig({smartColumnWidthsAdminEnabled: false}),
+        isBetterColumnsEnabledForEntity(createConfig({}), 'Lead', true),
+        false
+    );
+    assert.equal(
+        isBetterColumnsEnabledForEntity(
+            createConfig({betterColumnsAdminEnabled: true}),
+            'Lead',
+            true
+        ),
+        true
+    );
+    assert.equal(
+        isBetterColumnsEnabledForEntity(
+            createConfig({betterColumnsAdminEnabled: false}),
             'Lead'
         ),
         true
     );
     assert.equal(
-        isSmartColumnWidthsEnabledForEntity(createConfig({
-            smartColumnWidthsEnabled: false,
+        isBetterColumnsEnabledForEntity(createConfig({
+            betterColumnsEnabled: false,
         }), 'Lead'),
         false
     );
     assert.equal(
-        isSmartColumnWidthsEnabledForEntity(createConfig({
-            smartColumnWidthsAllEntities: false,
-            smartColumnWidthsEntityList: ['Lead', 'Account'],
+        isBetterColumnsEnabledForEntity(createConfig({
+            betterColumnsAllEntities: false,
+            betterColumnsEntityList: ['Lead', 'Account'],
         }), 'Lead'),
         true
     );
     assert.equal(
-        isSmartColumnWidthsEnabledForEntity(createConfig({
-            smartColumnWidthsAllEntities: false,
-            smartColumnWidthsEntityList: ['Account'],
+        isBetterColumnsEnabledForEntity(createConfig({
+            betterColumnsAllEntities: false,
+            betterColumnsEntityList: ['Account'],
         }), 'Lead'),
         false
     );

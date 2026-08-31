@@ -1,13 +1,13 @@
 {
-    "name": "espocrm/ext-smart-column-widths",
+    "name": "espocrm/ext-better-columns",
     "license": "GPL-3.0-or-later",
     "require": {
         "php": ">=8.3"
     },
     "autoload-dev": {
         "psr-4": {
-            "Espo\\Modules\\SmartColumnWidths\\": "src/files/custom/Espo/Modules/SmartColumnWidths",
-            "tests\\unit\\Espo\\Modules\\SmartColumnWidths\\": "tests/unit/Espo/Modules/SmartColumnWidths"
+            "Espo\\Modules\\BetterColumns\\": "src/files/custom/Espo/Modules/BetterColumns",
+            "tests\\unit\\Espo\\Modules\\BetterColumns\\": "tests/unit/Espo/Modules/BetterColumns"
         }
     },
     "require-dev": {

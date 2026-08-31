@@ -1,7 +1,7 @@
 {
-    "module": "SmartColumnWidths",
-    "name": "Smart Column Widths",
-    "description": "Predictable and adaptive column resizing for EspoCRM list views.",
+    "module": "BetterColumns",
+    "name": "Better Columns",
+    "description": "Column resizing, double-click auto-fit, reordering and persistent personal layouts for EspoCRM list views.",
     "author": "Alex Santin",
     "bundled": true,
     "acceptableVersions": [

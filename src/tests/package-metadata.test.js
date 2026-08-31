@@ -3,19 +3,19 @@ import {readFile} from 'node:fs/promises';
 import test from 'node:test';
 
 const clientMetadataPath = new URL(
-    '../files/custom/Espo/Modules/SmartColumnWidths/Resources/metadata/app/client.json',
+    '../files/custom/Espo/Modules/BetterColumns/Resources/metadata/app/client.json',
     import.meta.url
 );
 const adminPanelMetadataPath = new URL(
-    '../files/custom/Espo/Modules/SmartColumnWidths/Resources/metadata/app/adminPanel.json',
+    '../files/custom/Espo/Modules/BetterColumns/Resources/metadata/app/adminPanel.json',
     import.meta.url
 );
 const settingsMetadataPath = new URL(
-    '../files/custom/Espo/Modules/SmartColumnWidths/Resources/metadata/entityDefs/Settings.json',
+    '../files/custom/Espo/Modules/BetterColumns/Resources/metadata/entityDefs/Settings.json',
     import.meta.url
 );
 const settingsLayoutPath = new URL(
-    '../files/custom/Espo/Modules/SmartColumnWidths/Resources/layouts/Settings/smartColumnWidths.json',
+    '../files/custom/Espo/Modules/BetterColumns/Resources/layouts/Settings/betterColumns.json',
     import.meta.url
 );
 
@@ -26,20 +26,20 @@ test('the bundled frontend initializer is loaded by EspoCRM', async () => {
 
     assert.deepEqual(metadata.scriptList, [
         '__APPEND__',
-        'client/custom/modules/smart-column-widths/lib/init.js',
+        'client/custom/modules/better-columns/lib/init.js',
     ]);
 });
 
-test('administration entry opens the Smart Column Widths settings view', async () => {
+test('administration entry opens the Better Columns settings view', async () => {
     const metadata = JSON.parse(
         await readFile(adminPanelMetadataPath, 'utf8')
     );
     const item = metadata.customization.itemList[1];
 
-    assert.equal(item.url, '#Admin/smartColumnWidths');
+    assert.equal(item.url, '#Admin/betterColumns');
     assert.equal(
         item.recordView,
-        'smart-column-widths:views/admin/settings'
+        'better-columns:views/admin/settings'
     );
 });
 
@@ -51,18 +51,18 @@ test('settings expose global, administration, and per-entity activation fields',
     assert.deepEqual(
         Object.keys(metadata.fields),
         [
-            'smartColumnWidthsEnabled',
-            'smartColumnWidthsAdminEnabled',
-            'smartColumnWidthsAllEntities',
-            'smartColumnWidthsEntityList',
+            'betterColumnsEnabled',
+            'betterColumnsAdminEnabled',
+            'betterColumnsAllEntities',
+            'betterColumnsEntityList',
         ]
     );
     assert.equal(
-        metadata.fields.smartColumnWidthsAdminEnabled.default,
+        metadata.fields.betterColumnsAdminEnabled.default,
         false
     );
     assert.equal(
-        metadata.fields.smartColumnWidthsEntityList.type,
+        metadata.fields.betterColumnsEntityList.type,
         'multiEnum'
     );
 
@@ -73,10 +73,10 @@ test('settings expose global, administration, and per-entity activation fields',
     assert.deepEqual(
         layout[0].rows.map(row => row[0].name),
         [
-            'smartColumnWidthsEnabled',
-            'smartColumnWidthsAdminEnabled',
-            'smartColumnWidthsAllEntities',
-            'smartColumnWidthsEntityList',
+            'betterColumnsEnabled',
+            'betterColumnsAdminEnabled',
+            'betterColumnsAllEntities',
+            'betterColumnsEntityList',
         ]
     );
 });

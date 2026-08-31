@@ -1,0 +1,17 @@
+{
+    "labels": {
+        "Column Management": "Gestion des colonnes"
+    },
+    "fields": {
+        "betterColumnsEnabled": "Activer la gestion avancée des colonnes",
+        "betterColumnsAdminEnabled": "Activer dans l’administration",
+        "betterColumnsAllEntities": "Activer pour toutes les entités",
+        "betterColumnsEntityList": "Entités activées"
+    },
+    "tooltips": {
+        "betterColumnsEnabled": "Active ou désactive globalement Better Columns.",
+        "betterColumnsAdminEnabled": "Active ou désactive Better Columns dans toutes les listes de l’administration.",
+        "betterColumnsAllEntities": "Rend le redimensionnement et le déplacement avancés disponibles pour toutes les entités compatibles.",
+        "betterColumnsEntityList": "Entités pour lesquelles la gestion avancée des colonnes est disponible lorsque l’option toutes les entités est désactivée."
+    }
+}

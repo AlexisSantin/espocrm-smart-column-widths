@@ -1,0 +1,14 @@
+{
+    "customization": {
+        "itemList": [
+            "__APPEND__",
+            {
+                "url": "#Admin/betterColumns",
+                "label": "Better Columns",
+                "iconClass": "fas fa-arrows-left-right-to-line",
+                "description": "betterColumns",
+                "recordView": "better-columns:views/admin/settings"
+            }
+        ]
+    }
+}

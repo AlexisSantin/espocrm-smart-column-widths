@@ -44,7 +44,7 @@ jobs:
           TAG_NAME: ${{ github.ref_name }}
         run: |
           version="${TAG_NAME#v}"
-          test -f "build/smart-column-widths-${version}.zip"
+          test -f "build/better-columns-${version}.zip"
 
       - name: Create the GitHub release
         env:
@@ -53,7 +53,7 @@ jobs:
         run: |
           version="${TAG_NAME#v}"
           gh release create "$TAG_NAME" \
-            "build/smart-column-widths-${version}.zip" \
+            "build/better-columns-${version}.zip" \
             --repo "$GITHUB_REPOSITORY" \
-            --title "Smart Column Widths ${version}" \
+            --title "Better Columns ${version}" \
             --generate-notes

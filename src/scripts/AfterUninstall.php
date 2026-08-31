@@ -15,10 +15,10 @@ class AfterUninstall
         $configWriter = $factory->create(ConfigWriter::class);
 
         foreach ([
-            'smartColumnWidthsEnabled',
-            'smartColumnWidthsAdminEnabled',
-            'smartColumnWidthsAllEntities',
-            'smartColumnWidthsEntityList',
+            'betterColumnsEnabled',
+            'betterColumnsAdminEnabled',
+            'betterColumnsAllEntities',
+            'betterColumnsEntityList',
         ] as $name) {
             $configWriter->remove($name);
         }

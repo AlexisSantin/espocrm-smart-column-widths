@@ -1,12 +1,12 @@
 {
-  "name": "espocrm-ext-smart-column-widths",
-  "version": "0.2.4",
-  "description": "Predictable and adaptive column resizing for EspoCRM list views",
+  "name": "espocrm-ext-better-columns",
+  "version": "1.0.0",
+  "description": "Column resizing, double-click auto-fit, reordering and persistent personal layouts for EspoCRM list views",
   "scripts": {
     "test": "node --test --test-reporter=spec src/tests/*.test.js",
     "sa": "vendor/bin/phpstan",
     "unit-tests": "vendor/bin/phpunit",
-    "integration-tests": "node build --copy && node build --composer-install && cd site && php vendor/bin/phpunit tests/integration/Espo/Modules/SmartColumnWidths",
+    "integration-tests": "node build --copy && node build --composer-install && cd site && php vendor/bin/phpunit tests/integration/Espo/Modules/BetterColumns",
     "copy": "node build --copy",
     "composer-install": "node build --composer-install",
     "sync": "node build --copy && node build --composer-install",

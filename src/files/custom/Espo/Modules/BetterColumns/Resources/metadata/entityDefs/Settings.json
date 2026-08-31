@@ -1,0 +1,25 @@
+{
+    "fields": {
+        "betterColumnsEnabled": {
+            "type": "bool",
+            "default": true,
+            "tooltip": true
+        },
+        "betterColumnsAdminEnabled": {
+            "type": "bool",
+            "default": false,
+            "tooltip": true
+        },
+        "betterColumnsAllEntities": {
+            "type": "bool",
+            "default": true,
+            "tooltip": true
+        },
+        "betterColumnsEntityList": {
+            "type": "multiEnum",
+            "translation": "Global.scopeNamesPlural",
+            "view": "better-columns:views/fields/entity-list",
+            "tooltip": true
+        }
+    }
+}
